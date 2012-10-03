@@ -20,6 +20,8 @@ lib/OIDC/Lite/Model/IDToken.pm
 lib/OIDC/Lite/Server/Endpoint/Token.pm
 lib/OIDC/Lite/Server/GrantHandler/AuthorizationCode.pm
 lib/OIDC/Lite/Server/GrantHandlers.pm
+lib/OIDC/Lite/Server/DataHandler.pm
+lib/OIDC/Lite/Server/AuthorizationHandler.pm
 lib/OIDC/Lite/Util/JWT.pm
 lib/Plack/Middleware/Auth/OIDC/ProtectedResource.pm
 Makefile.PL
