@@ -10,7 +10,6 @@ use TestDataHandler;
 use OIDC::Lite::Server::AuthorizationHandler;
 use OAuth::Lite2::Util qw(build_content);
 use OAuth::Lite2::Server::Error;
-use Data::Dumper;
 
 TestDataHandler->clear;
 TestDataHandler->add_client(    id => q{client_id_1}, 
@@ -616,7 +615,7 @@ TEST_REQUEST_ALLOW: {
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
     is($res->{fragment}->{code}, q{code_3});
-    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIifQ.MoAjPCFwLGNJ9Fp02YieXURSosAhvdxP4pAds3Z31HI});
+    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIiLCJjX2hhc2giOiJ2NDR2aEJSWUU5Nk16ZkxNek5kcGhnIn0.jNXHRrRREkLSA7vgNoZHgJDjsEhA8I9ImyE5MIuVu9M});
     ok(!$res->{fragment}->{access_token});
     ok(!$res->{fragment}->{token_type});
     ok(!$res->{fragment}->{expires_in});
@@ -670,7 +669,7 @@ TEST_REQUEST_ALLOW: {
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
     ok(!$res->{fragment}->{code});
-    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIifQ.MoAjPCFwLGNJ9Fp02YieXURSosAhvdxP4pAds3Z31HI});
+    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXRfaGFzaCI6IlJpalczZHJmd2dBZ0tsYWYxLWwwSmciLCJhdWQiOiJhdWRzdHIiLCJ1c2VyX2lkIjoiMSIsImlzcyI6Imlzc3N0ciJ9.-55uHaWL7Z4f-y2WM2GpVib4c3GS9RSZND53AVMeCHY});
     is($res->{fragment}->{access_token}, q{access_token_2});
     is($res->{fragment}->{token_type}, q{Bearer});
     ok($res->{fragment}->{expires_in});
@@ -697,7 +696,7 @@ TEST_REQUEST_ALLOW: {
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
     is($res->{fragment}->{code}, q{code_6});
-    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIifQ.MoAjPCFwLGNJ9Fp02YieXURSosAhvdxP4pAds3Z31HI});
+    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXRfaGFzaCI6IldQVmJyQXFOSmFPSXU0aW1QSDE5Z2ciLCJhdWQiOiJhdWRzdHIiLCJ1c2VyX2lkIjoiMSIsImlzcyI6Imlzc3N0ciIsImNfaGFzaCI6Il9QWVVfN0k1M2NwWHkxVTN4eW9hTHcifQ.AvqH9mWsO-BDBjx-zsHTmGO-58_Yn2TkXoE67rd8v5k});
     is($res->{fragment}->{access_token}, q{access_token_3});
     is($res->{fragment}->{token_type}, q{Bearer});
     ok($res->{fragment}->{expires_in});

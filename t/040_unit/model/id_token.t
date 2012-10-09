@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 25;
 use OIDC::Lite::Model::IDToken;
 
 my $pkeyfile = "t/lib/private_np.pem";
@@ -86,6 +86,50 @@ TEST_GET_TOKEN_STRING: {
     );
     $id_token_string = $id_token->get_token_string();
     is( $id_token_string, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.M3bzN8GKhPxFyENIwcnLb7S_ofOHOjJDh1LXfK5X8No60PGCVa5JIgDeHKLC4_g-mnUqq-JEmxVc8so3FpPWea8c4zHWU1tr1n-GLFO4TSAnsIfuPFcvJB8rNVe4iHA4ePKqUE8Z7jb_d0pcg4NpXr0GYPIg_NQbQIPwjpNz789dpNH3_OClJxeY_ELMkWoZAWHO6uTymPnmlg2KK0PlRp60yWhHi9JlgObYrUEItnjfOyOOqL37oL-S4GyENYFbzcdkCicPIFnnK4oFIY-NmO5Fh6g-NaSPSmgcSiJzbOOdaWNeG6HDQINAEcwT18vUHRVwzGqU1AATztDGpF3mVQ');
+};
+
+TEST_HASH: {
+
+    # alg : none
+    my %header =    (
+                        alg => 'none',
+                        typ => 'JWS',
+                    );
+    my %payload =   (
+                        foo => 'bar'
+                    );
+    my $id_token = OIDC::Lite::Model::IDToken->new(
+        header  => \%header,
+        payload => \%payload,
+    );
+    my $access_token = 'access_token_string';
+    my $authorization_code = 'authorization_code_string';
+    $id_token->access_token_hash($access_token);
+    $id_token->code_hash($authorization_code);
+    my $id_token_string = $id_token->get_token_string();
+    is( $id_token_string, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJub25lIn0.eyJmb28iOiJiYXIifQ.');
+
+    # alg : HS256
+    %header =       (
+                        alg => 'HS256',
+                        typ => 'JWS',
+                    );
+    %payload =      (
+                        foo => 'bar'
+                    );
+    my $key = q{this_is_shared_secret_key};
+    $id_token = OIDC::Lite::Model::IDToken->new(
+        header  => \%header,
+        payload => \%payload,
+        key     => $key,
+    );
+    $id_token->access_token_hash($access_token);
+    $id_token->code_hash($authorization_code);
+    is( $id_token->payload->{foo}, 'bar');
+    is( $id_token->payload->{at_hash}, 'JnPXVfC--Wj6h3moc1dyiQ');
+    is( $id_token->payload->{c_hash}, 'f0zfwRaKGf53ea5EmauamA');
+    $id_token_string = $id_token->get_token_string();
+    is( $id_token_string, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJIUzI1NiJ9.eyJhdF9oYXNoIjoiSm5QWFZmQy0tV2o2aDNtb2MxZHlpUSIsImZvbyI6ImJhciIsImNfaGFzaCI6ImYwemZ3UmFLR2Y1M2VhNUVtYXVhbUEifQ.WcsoqJxT-HCpaeEdQ_cNTJ_6nYx_QlAs718_o3cs_R8');
 };
 
 TEST_LOAD: {

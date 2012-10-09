@@ -6,6 +6,8 @@ use warnings;
 use base 'Class::Accessor::Fast';
 use Params::Validate;
 use OIDC::Lite::Util::JWT;
+use MIME::Base64 qw/encode_base64url decode_base64url/;
+use Digest::SHA qw/sha256 sha384 sha512/;
 
 =head1 NAME
 
@@ -96,6 +98,48 @@ sub get_token_string {
     my $jwt = OIDC::Lite::Util::JWT->encode($self->header, $self->payload, $self->key);
     $self->token_string($jwt);
     return $jwt;
+}
+
+=head2 access_token_hash()
+
+generate signarure and return ID Token string.
+
+    $id_token->code_hash($access_token);
+
+=cut
+
+sub access_token_hash {
+    my ($self, $access_token_string) = @_;
+
+    if($self->header->{alg} && $self->header->{alg} ne 'none')
+    {
+        my $bit = substr($self->header->{alg}, 2, 3);
+        my $len = $bit/16;
+        my $sha = Digest::SHA->new($bit);
+        $sha->add($access_token_string);
+        $self->payload->{at_hash} = encode_base64url(substr($sha->digest, 0, $len));
+    }
+}
+
+=head2 code_hash()
+
+Set Authorization Code Hash to ID Token.
+
+    $id_token->code_hash($authorization_code);
+
+=cut
+
+sub code_hash {
+    my ($self, $authorization_code) = @_;
+
+    if($self->header->{alg} && $self->header->{alg} ne 'none')
+    {
+        my $bit = substr($self->header->{alg}, 2, 3);
+        my $len = $bit/16;
+        my $sha = Digest::SHA->new($bit);
+        $sha->add($authorization_code);
+        $self->payload->{c_hash} = encode_base64url(substr($sha->digest, 0, $len));
+    }
 }
 
 =head2 load($token_string)
