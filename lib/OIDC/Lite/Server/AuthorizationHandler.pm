@@ -5,7 +5,6 @@ use warnings;
 
 use OAuth::Lite2::Server::Error;
 use Carp ();
-use Data::Dumper;
 
 sub new {
     my $class = shift;
@@ -123,14 +122,16 @@ sub allow {
 
     # create Access Token
     my $access_token;
-    $access_token = $dh->create_or_update_access_token(
-                        auth_info => $auth_info,
-    ) if (
+    if (
         $req->param("response_type") eq 'token' ||
         $req->param("response_type") eq 'code token' ||
         $req->param("response_type") eq 'id_token token' ||
-        $req->param("response_type") eq 'code id_token token'
-    );
+        $req->param("response_type") eq 'code id_token token')
+    {
+        $access_token = $dh->create_or_update_access_token(
+                        auth_info => $auth_info,
+        );
+    }
   
     my $params = {};
     # state
@@ -139,6 +140,7 @@ sub allow {
  
     # access token
     if($access_token){
+        $id_token->access_token_hash($access_token->token);
         $params->{access_token} = $access_token->token; 
         $params->{token_type} = q{Bearer}; 
         $params->{expires_in} = $access_token->expires_in
@@ -146,16 +148,18 @@ sub allow {
     }
 
     # authorization code
-    $params->{code} = $auth_info->code
-        if (
-            $req->param("response_type") eq 'code' ||
-            $req->param("response_type") eq 'code token' ||
-            $req->param("response_type") eq 'code id_token' ||
-            $req->param("response_type") eq 'code id_token token'
-        );
+    if (
+        $req->param("response_type") eq 'code' ||
+        $req->param("response_type") eq 'code token' ||
+        $req->param("response_type") eq 'code id_token' ||
+        $req->param("response_type") eq 'code id_token token')
+    {
+        $params->{code} = $auth_info->code;
+        $id_token->code_hash($auth_info->code);
+    }
 
     # id_token
-    $params->{id_token} = $auth_info->id_token
+    $params->{id_token} = $id_token->get_token_string()
         if (
             $req->param("response_type") eq 'id_token' ||
             $req->param("response_type") eq 'code id_token' ||
