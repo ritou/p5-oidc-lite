@@ -69,7 +69,7 @@ sub handle_request {
     my $nonce = $req->param("nonce");
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
         description => "nonce_required"
-    ) if (!$nonce && $response_type ne "token" && $response_type ne "code");
+    ) if (!$nonce && $response_type ne "token" && $response_type ne "code" && $response_type ne "code token");
 
     # display
     my $display = $req->param("display");
