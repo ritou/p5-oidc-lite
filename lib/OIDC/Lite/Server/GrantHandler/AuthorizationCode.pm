@@ -5,6 +5,7 @@ use warnings;
 
 use parent 'OAuth::Lite2::Server::GrantHandler';
 use OAuth::Lite2::Server::Error;
+use OIDC::Lite::Model::AuthInfo;
 use Carp ();
 
 sub handle_request {
@@ -29,7 +30,7 @@ sub handle_request {
 
     Carp::croak "OAuth::Lite2::Server::DataHandler::get_auth_info_by_code doesn't return OAuth::Lite2::Model::AuthInfo"
         unless ($auth_info
-            && $auth_info->isa("OAuth::Lite2::Model::AuthInfo"));
+            && $auth_info->isa("OIDC::Lite::Model::AuthInfo"));
 
     OAuth::Lite2::Server::Error::InvalidClient->throw
         unless ($auth_info->client_id eq $client_id);
