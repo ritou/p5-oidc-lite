@@ -76,7 +76,7 @@ sub header {
     my $self = shift;
     my ($jwt) = @_;
     my $segments = [split(/\./, $jwt)];
-    return ''
+    return {}
         unless (@$segments == 2 or @$segments == 3);
 
     my ($header_segment, $payload_segment, $crypt_segment) = @$segments;
@@ -92,7 +92,7 @@ sub payload {
     my $self = shift;
     my ($jwt) = @_;
     my $segments = [split(/\./, $jwt)];
-    return ''
+    return {}
         unless (@$segments == 2 or @$segments == 3);
 
     my ($header_segment, $payload_segment, $crypt_segment) = @$segments;

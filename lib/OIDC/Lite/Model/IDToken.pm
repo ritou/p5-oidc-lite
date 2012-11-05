@@ -8,6 +8,9 @@ use Params::Validate;
 use OIDC::Lite::Util::JWT;
 use MIME::Base64 qw/encode_base64url decode_base64url/;
 use Digest::SHA qw/sha256 sha384 sha512/;
+use constant HALF_BITS_DENOMINATOR => 2 * 8;
+use constant ALG_LEN => 2;
+use constant BITS_LEN => 3;
 
 =head1 NAME
 
@@ -113,8 +116,8 @@ sub access_token_hash {
 
     if($self->header->{alg} && $self->header->{alg} ne 'none')
     {
-        my $bit = substr($self->header->{alg}, 2, 3);
-        my $len = $bit/16;
+        my $bit = substr($self->header->{alg}, ALG_LEN, BITS_LEN);
+        my $len = $bit/HALF_BITS_DENOMINATOR;
         my $sha = Digest::SHA->new($bit);
         $sha->add($access_token_string);
         $self->payload->{at_hash} = encode_base64url(substr($sha->digest, 0, $len));
@@ -134,8 +137,8 @@ sub code_hash {
 
     if($self->header->{alg} && $self->header->{alg} ne 'none')
     {
-        my $bit = substr($self->header->{alg}, 2, 3);
-        my $len = $bit/16;
+        my $bit = substr($self->header->{alg}, ALG_LEN, BITS_LEN);
+        my $len = $bit/HALF_BITS_DENOMINATOR;
         my $sha = Digest::SHA->new($bit);
         $sha->add($authorization_code);
         $self->payload->{c_hash} = encode_base64url(substr($sha->digest, 0, $len));
@@ -166,8 +169,8 @@ sub load {
     }
     
     my $id_token =  OIDC::Lite::Model::IDToken->new(
-                       header   => \%{$header}, 
-                       payload  => \%{$payload}, 
+                       header   => $header, 
+                       payload  => $payload, 
                     );
     $id_token->token_string($token_string);
     return $id_token;
