@@ -25,16 +25,14 @@ JSON Web Token utility class.
 sub encode {
     my $self = shift;
     my ($header, $payload, $key) = @_;
-    my $algorithm = $header->{alg};
-    unless (defined($algorithm)) {
-        $algorithm = 'none';
-    }
+    my $algorithm = defined($header->{alg}) ? $header->{alg} : q{none};
 
     my $segments = [];
     push(@$segments, encode_base64url(encode_json($header)));
     push(@$segments, encode_base64url(encode_json($payload)));
     my $signing_input = join('.', @$segments);
-    unless ($algorithm eq 'none') {
+
+    unless ($algorithm eq q{none}) {
         my $signature = $self->sign($algorithm, $key, $signing_input);
         push(@$segments, encode_base64url($signature));
     } else {
@@ -50,20 +48,14 @@ sub verify{
     my $segments = [split(/\./, $token_string)];
     return ''
         unless (@$segments == 2 or @$segments == 3);
-
-    if(@$segments == 3){
-        pop(@$segments);
-    }
-
+    
+    pop(@$segments) if(@$segments == 3);
     my ($header_segment, $payload_segment, $crypt_segment) = @$segments;
     my $header = decode_json(decode_base64url($header_segment));
-    my $algorithm = $header->{alg};
-    unless (defined($algorithm)) {
-        $algorithm = 'none';
-    }
+    my $algorithm = defined($header->{alg}) ? $header->{alg} : q{none};
 
     my $signing_input = $header_segment.'.'.$payload_segment;
-    unless ($algorithm eq 'none') {
+    unless ($algorithm eq q{none}) {
         my $signature = $self->sign($algorithm, $key, $signing_input);
         push(@$segments, encode_base64url($signature));
     } else {

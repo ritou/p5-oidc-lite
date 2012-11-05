@@ -44,7 +44,7 @@ sub handle_request {
     my $client_id = $req->param("client_id")
         or OAuth::Lite2::Server::Error::InvalidClient->throw(
             description => "'client_id' not found"
-    );
+        );
 
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
         description => "'response_type' not allowed for this 'client_id'"
@@ -54,7 +54,7 @@ sub handle_request {
     my $redirect_uri = $req->param("redirect_uri")
         or OAuth::Lite2::Server::Error::InvalidRequest->throw(
             description => "'redirect_uri' not found"
-    );
+        );
     
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
         description => "'redirect_uri' is invalid"
@@ -135,16 +135,14 @@ sub allow {
   
     my $params = {};
     # state
-    $params->{state} = $req->param("state")
-        if($req->param("state"));
+    $params->{state} = $req->param("state") if($req->param("state"));
  
     # access token
     if($access_token){
         $id_token->access_token_hash($access_token->token);
         $params->{access_token} = $access_token->token; 
         $params->{token_type} = q{Bearer}; 
-        $params->{expires_in} = $access_token->expires_in
-                                    if $access_token->expires_in;
+        $params->{expires_in} = $access_token->expires_in if($access_token->expires_in);
     }
 
     # authorization code
