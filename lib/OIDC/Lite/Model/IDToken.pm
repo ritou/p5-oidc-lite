@@ -156,18 +156,12 @@ load ID Token object from token string
 
 sub load {
     my ($self, $token_string) = @_;
-
-    unless($token_string){
-        return undef;
-    }
+    return undef unless($token_string);
 
     my $header  = OIDC::Lite::Util::JWT->header($token_string);
     my $payload = OIDC::Lite::Util::JWT->payload($token_string);
+    return undef if(!$header && !$payload);
 
-    if(!$header && !$payload){
-        return undef;
-    }
-    
     my $id_token =  OIDC::Lite::Model::IDToken->new(
                        header   => $header, 
                        payload  => $payload, 
