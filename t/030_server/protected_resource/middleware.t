@@ -38,40 +38,41 @@ sub request {
 }
 
 my ($req, $res);
+# LEGACY
 $req = HTTP::Request->new("GET" => q{http://example.org/});
 $req->header("Authorization" => sprintf(q{OAuth %s}, $access_token->token));
 $res = &request($req);
 ok($res->is_success, 'request should not fail');
-is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"]}}, 'successful response');
+is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"], is_legacy: '1'}}, 'successful response');
 
 $req = HTTP::Request->new("POST" => q{http://example.org/});
 $req->content_type('application/x-www-form-urlencoded');
 $req->content(sprintf(q{oauth_token=%s}, $access_token->token));
 $res = &request($req);
 ok($res->is_success, 'request should not fail');
-is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"]}}, 'successful response');
+is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"], is_legacy: '1'}}, 'successful response');
 
 $req = HTTP::Request->new("GET" => sprintf(q{http://example.org/?oauth_token=%s}, $access_token->token));
 $res = &request($req);
 ok($res->is_success, 'request should not fail');
-is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"]}}, 'successful response');
+is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"], is_legacy: '1'}}, 'successful response');
 
-# draft 23
+# RFC
 $req = HTTP::Request->new("GET" => q{http://example.org/});
 $req->header("Authorization" => sprintf(q{Bearer %s}, $access_token->token));
 $res = &request($req);
 ok($res->is_success, 'request should not fail');
-is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"]}}, 'successful response');
+is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"], is_legacy: '0'}}, 'successful response');
 
 $req = HTTP::Request->new("POST" => q{http://example.org/});
 $req->content_type('application/x-www-form-urlencoded');
 $req->content(sprintf(q{access_token=%s}, $access_token->token));
 $res = &request($req);
 ok($res->is_success, 'request should not fail');
-is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"]}}, 'successful response');
+is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"], is_legacy: '0'}}, 'successful response');
 
 $req = HTTP::Request->new("GET" => sprintf(q{http://example.org/?access_token=%s}, $access_token->token));
 $res = &request($req);
 ok($res->is_success, 'request should not fail');
-is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"]}}, 'successful response');
+is($res->content, q{{user: '1', scope: 'email', claims: ["user_id","email"], is_legacy: '0'}}, 'successful response');
 
