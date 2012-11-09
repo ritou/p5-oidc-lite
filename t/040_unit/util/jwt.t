@@ -1,15 +1,22 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 24;
 use OIDC::Lite::Util::JWT;
 use JSON qw/decode_json encode_json/;
+use Data::Dumper;
 
-my $pkeyfile = "t/lib/private_np.pem";
-my $pkey;
-open(PRIV,$pkeyfile) || die "$pkeyfile: $!";
-read(PRIV,$pkey,-s PRIV);
+my $privkeyfile = "t/lib/private_np.pem";
+my $privkey;
+open(PRIV,$privkeyfile) || die "$privkeyfile: $!";
+read(PRIV,$privkey,-s PRIV);
 close(PRIV);
+
+my $pubkeyfile = "t/lib/public.pem";
+my $pubkey;
+open(PUB,$pubkeyfile) || die "$pubkeyfile: $!";
+read(PUB,$pubkey,-s PUB);
+close(PUB);
 
 TEST_ENCODE: {
     # none
@@ -44,7 +51,7 @@ TEST_ENCODE: {
     %payload =   (
                         foo => 'bar'
                     );
-    $jwt = OIDC::Lite::Util::JWT->encode(\%header, \%payload, $pkey);
+    $jwt = OIDC::Lite::Util::JWT->encode(\%header, \%payload, $privkey);
     is( $jwt, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.M3bzN8GKhPxFyENIwcnLb7S_ofOHOjJDh1LXfK5X8No60PGCVa5JIgDeHKLC4_g-mnUqq-JEmxVc8so3FpPWea8c4zHWU1tr1n-GLFO4TSAnsIfuPFcvJB8rNVe4iHA4ePKqUE8Z7jb_d0pcg4NpXr0GYPIg_NQbQIPwjpNz789dpNH3_OClJxeY_ELMkWoZAWHO6uTymPnmlg2KK0PlRp60yWhHi9JlgObYrUEItnjfOyOOqL37oL-S4GyENYFbzcdkCicPIFnnK4oFIY-NmO5Fh6g-NaSPSmgcSiJzbOOdaWNeG6HDQINAEcwT18vUHRVwzGqU1AATztDGpF3mVQ');
 };
 
@@ -86,9 +93,22 @@ TEST_VERIFY: {
                         foo => 'bar'
                     );
     $jwt = 'eyJ0eXAiOiJKV1MiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.M3bzN8GKhPxFyENIwcnLb7S_ofOHOjJDh1LXfK5X8No60PGCVa5JIgDeHKLC4_g-mnUqq-JEmxVc8so3FpPWea8c4zHWU1tr1n-GLFO4TSAnsIfuPFcvJB8rNVe4iHA4ePKqUE8Z7jb_d0pcg4NpXr0GYPIg_NQbQIPwjpNz789dpNH3_OClJxeY_ELMkWoZAWHO6uTymPnmlg2KK0PlRp60yWhHi9JlgObYrUEItnjfOyOOqL37oL-S4GyENYFbzcdkCicPIFnnK4oFIY-NmO5Fh6g-NaSPSmgcSiJzbOOdaWNeG6HDQINAEcwT18vUHRVwzGqU1AATztDGpF3mVQ';
-    ok(OIDC::Lite::Util::JWT->verify($jwt, $pkey));
+    ok(OIDC::Lite::Util::JWT->verify($jwt, $pubkey));
     $jwt = 'eyJ0eXAiOiJKV1MiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.INVALID';
-    ok(!OIDC::Lite::Util::JWT->verify($jwt, $pkey));
+    ok(!OIDC::Lite::Util::JWT->verify($jwt, $pubkey));
+};
+
+TEST_VALID_ALGORITHM: {
+    my @valid_alg = ('HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512');
+    my $alg = '';
+    foreach $alg (@valid_alg){
+        ok(OIDC::Lite::Util::JWT->valid_algorithm($alg));
+    }
+
+    my @invalid_alg = ('HS257', 'RSA256');
+    foreach $alg (@invalid_alg){
+        ok(!OIDC::Lite::Util::JWT->valid_algorithm($alg));
+    }
 };
 
 TEST_HEADER: {

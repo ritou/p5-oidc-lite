@@ -4,11 +4,17 @@ use warnings;
 use Test::More tests => 25;
 use OIDC::Lite::Model::IDToken;
 
-my $pkeyfile = "t/lib/private_np.pem";
-my $pkey;
-open(PRIV,$pkeyfile) || die "$pkeyfile: $!";
-read(PRIV,$pkey,-s PRIV);
+my $privkeyfile = "t/lib/private_np.pem";
+my $privkey;
+open(PRIV,$privkeyfile) || die "$privkeyfile: $!";
+read(PRIV,$privkey,-s PRIV);
 close(PRIV);
+
+my $pubkeyfile = "t/lib/public.pem";
+my $pubkey;
+open(PUB,$pubkeyfile) || die "$pubkeyfile: $!";
+read(PUB,$pubkey,-s PUB);
+close(PUB);
 
 TEST_NEW: {
 
@@ -82,7 +88,7 @@ TEST_GET_TOKEN_STRING: {
     $id_token = OIDC::Lite::Model::IDToken->new(
         header  => \%header,
         payload => \%payload,
-        key     => $pkey,
+        key     => $privkey,
     );
     $id_token_string = $id_token->get_token_string();
     is( $id_token_string, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.M3bzN8GKhPxFyENIwcnLb7S_ofOHOjJDh1LXfK5X8No60PGCVa5JIgDeHKLC4_g-mnUqq-JEmxVc8so3FpPWea8c4zHWU1tr1n-GLFO4TSAnsIfuPFcvJB8rNVe4iHA4ePKqUE8Z7jb_d0pcg4NpXr0GYPIg_NQbQIPwjpNz789dpNH3_OClJxeY_ELMkWoZAWHO6uTymPnmlg2KK0PlRp60yWhHi9JlgObYrUEItnjfOyOOqL37oL-S4GyENYFbzcdkCicPIFnnK4oFIY-NmO5Fh6g-NaSPSmgcSiJzbOOdaWNeG6HDQINAEcwT18vUHRVwzGqU1AATztDGpF3mVQ');
@@ -186,11 +192,11 @@ TEST_VERIFY: {
     # alg : RS256
     $token_string = 'eyJ0eXAiOiJKV1MiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.M3bzN8GKhPxFyENIwcnLb7S_ofOHOjJDh1LXfK5X8No60PGCVa5JIgDeHKLC4_g-mnUqq-JEmxVc8so3FpPWea8c4zHWU1tr1n-GLFO4TSAnsIfuPFcvJB8rNVe4iHA4ePKqUE8Z7jb_d0pcg4NpXr0GYPIg_NQbQIPwjpNz789dpNH3_OClJxeY_ELMkWoZAWHO6uTymPnmlg2KK0PlRp60yWhHi9JlgObYrUEItnjfOyOOqL37oL-S4GyENYFbzcdkCicPIFnnK4oFIY-NmO5Fh6g-NaSPSmgcSiJzbOOdaWNeG6HDQINAEcwT18vUHRVwzGqU1AATztDGpF3mVQ';
     $id_token = OIDC::Lite::Model::IDToken->load($token_string);
-    $id_token->key($pkey);
+    $id_token->key($pubkey);
     ok($id_token->verify());
 
     $token_string = 'eyJ0eXAiOiJKV1MiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.INVALID';
     $id_token = OIDC::Lite::Model::IDToken->load($token_string);
-    $id_token->key($pkey);
+    $id_token->key($pubkey);
     ok(!$id_token->verify());
 };
