@@ -13,7 +13,7 @@ sub handle_request {
 
     my $req = $dh->request;
 
-    my $client_id = $req->param("client_id");
+    my $client_id = $self->{client_id};
 
     my $code = $req->param("code")
         or OAuth::Lite2::Server::Error::InvalidRequest->throw(
