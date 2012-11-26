@@ -37,7 +37,6 @@ sub test_success {
     });
     my $dh = TestDataHandler->new(request => $request);
     my $res; try {
-        $action->{client_id} = $request->param("client_id");
         $res = $action->handle_request($dh);
     } catch {
         my $error_message = ($_->isa("OAuth::Lite2::Error"))
@@ -86,7 +85,6 @@ sub test_error {
     });
     my $dh = TestDataHandler->new(request => $request);
     my $error_message; try {
-        $action->{client_id} = $request->param("client_id");
         my $res = $action->handle_request($dh);
     } catch {
         $error_message = ($_->isa("OAuth::Lite2::Error"))
