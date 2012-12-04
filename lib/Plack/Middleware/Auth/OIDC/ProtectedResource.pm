@@ -41,7 +41,7 @@ sub call {
         OAuth::Lite2::Server::Error::InvalidToken->throw
             unless $access_token;
 
-        Carp::croak "OAuth::Lite2::Server::DataHandler::get_access_token doesn't return OAuth::Lite2::Model::AccessToken"
+        Carp::croak "OIDC::Lite::Server::DataHandler::get_access_token doesn't return OAuth::Lite2::Model::AccessToken"
             unless $access_token->isa("OAuth::Lite2::Model::AccessToken");
 
         unless ($access_token->created_on + $access_token->expires_in > time())
@@ -58,8 +58,8 @@ sub call {
         OAuth::Lite2::Server::Error::InvalidToken->throw
             unless $auth_info;
 
-        Carp::croak "OAuth::Lite2::Server::DataHandler::get_auth_info_by_id doesn't return OAuth::Lite2::Model::AuthInfo"
-            unless $auth_info->isa("OAuth::Lite2::Model::AuthInfo");
+        Carp::croak "OIDC::Lite::Server::DataHandler::get_auth_info_by_id doesn't return OIDC::Lite::Model::AuthInfo"
+            unless $auth_info->isa("OIDC::Lite::Model::AuthInfo");
 
         $dh->validate_client_by_id($auth_info->client_id)
             or OAuth::Lite2::Server::Error::InvalidToken->throw;
