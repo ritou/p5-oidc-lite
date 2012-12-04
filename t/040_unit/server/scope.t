@@ -1,0 +1,52 @@
+use strict;
+use warnings;
+
+use Test::More tests => 13;
+use OIDC::Lite::Server::Scope;
+
+TEST_IS_OPENID_REQUEST: {
+    my @scopes = qw{scope1};
+    ok(!OIDC::Lite::Server::Scope->is_openid_request(\@scopes));
+
+    @scopes = qw{openid};
+    ok(OIDC::Lite::Server::Scope->is_openid_request(\@scopes));
+
+    @scopes = qw{scope1 scope2};
+    ok(!OIDC::Lite::Server::Scope->is_openid_request(\@scopes));
+
+    @scopes = qw{scope1 openid};
+    ok(OIDC::Lite::Server::Scope->is_openid_request(\@scopes));
+};
+
+TEST_TO_NORMAL_CLAIMS: {
+    my @scopes = qw{scope1};
+    my $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
+    ok(!@$claims);
+
+    @scopes = qw{openid};
+    $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
+    my @expected_claims = qw{user_id};
+    ok(@$claims);
+    is(@$claims, @expected_claims);
+
+    @scopes = qw{openid profile};
+    $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
+    @expected_claims = qw{user_id name family_name given_name middle_name 
+                          nickname preferred_username profile 
+                          picture website gender birthday 
+                          zoneinfo locale updated_time};
+    ok(@$claims);
+    is(@$claims, @expected_claims);
+
+    @scopes = qw{openid email};
+    $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
+    @expected_claims = qw{user_id email email_verified};
+    ok(@$claims);
+    is(@$claims, @expected_claims);
+
+    @scopes = qw{openid phone};
+    $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
+    @expected_claims = qw{user_id phone_number};
+    ok(@$claims);
+    is(@$claims, @expected_claims);
+};
