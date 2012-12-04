@@ -1,5 +1,5 @@
 use strict;
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 BEGIN { 
     use_ok('OIDC::Lite'); 
@@ -11,5 +11,6 @@ BEGIN {
     use_ok('OIDC::Lite::Server::Endpoint::Token');
     use_ok('OIDC::Lite::Server::GrantHandlers');
     use_ok('OIDC::Lite::Server::GrantHandler::AuthorizationCode');
+    use_ok('OIDC::Lite::Server::Scope');
     use_ok('OIDC::Lite::Util::JWT');
 };
