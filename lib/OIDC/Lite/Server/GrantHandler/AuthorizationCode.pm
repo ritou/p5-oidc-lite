@@ -16,7 +16,7 @@ sub handle_request {
 
     my $parser = OAuth::Lite2::ParamMethod::AuthHeader->new;
     my $header_credentials = $parser->basic_credentials($req);
-    my $client_id = (defined($header_credentials)) ? $header_credentials->{client_id} : $req->param("client_id");
+    my $client_id = ($header_credentials->{client_id}) ? $header_credentials->{client_id} : $req->param("client_id");
 
     my $code = $req->param("code")
         or OAuth::Lite2::Server::Error::InvalidRequest->throw(

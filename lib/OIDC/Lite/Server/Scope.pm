@@ -31,7 +31,7 @@ sub to_normal_claims{
         push(@claims, qw(email email_verified))
             if($scope eq 'email');
 
-        push(@claims, qw{adress})
+        push(@claims, qw{address})
             if($scope eq 'address');
 
         push(@claims, qw{phone_number})
@@ -60,7 +60,7 @@ OIDC::Lite::Server::Scope - utility class for OpenID Connect Scope
     }
     
     # returned normal claims for scopes
-    my $claims = OIDC::Lite::Server::Scope->to_normal_claims
+    my $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
 
 =head1 DESCRIPTION
 
