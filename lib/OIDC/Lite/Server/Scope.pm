@@ -2,7 +2,19 @@ package OIDC::Lite::Server::Scope;
 
 use strict;
 use warnings;
-use Data::Dumper;
+
+sub validate_scopes{
+    my ($self, $scopes) = @_;
+
+    # if scope includes 'openid' , return true
+    return 1 if ($self->is_openid_request($scopes));
+
+    # if scope doesn't include 'openid', other OIDC scope must not be included.
+    foreach my $scope (@$scopes){
+        return 0 if (grep {$_ eq $scope} qw{profile email address phone});
+    }
+    return 1;
+}
 
 sub is_openid_request{
     my ($self, $scopes) = @_;
@@ -11,8 +23,8 @@ sub is_openid_request{
     return 0 unless (ref($scopes) eq 'ARRAY');
 
     # if it has 'openid', return true.
-    return (grep {$_ eq 'openid'} @$scopes);
-};
+    return (grep {$_ eq q{openid}} @$scopes);
+}
 
 sub to_normal_claims{
     my ($self, $scopes) = @_;
@@ -20,26 +32,26 @@ sub to_normal_claims{
     my @claims;
     foreach my $scope (@$scopes){
         push(@claims, qw{user_id})
-            if($scope eq 'openid');
+            if($scope eq q{openid});
 
         push(@claims, qw{name family_name given_name middle_name 
                          nickname preferred_username profile 
                          picture website gender birthday 
                          zoneinfo locale updated_time})
-            if($scope eq 'profile');
+            if($scope eq q{profile});
 
         push(@claims, qw(email email_verified))
-            if($scope eq 'email');
+            if($scope eq q{email});
 
         push(@claims, qw{address})
-            if($scope eq 'address');
+            if($scope eq q{address});
 
         push(@claims, qw{phone_number})
-            if($scope eq 'phone');
+            if($scope eq q{phone});
     }
 
     return \@claims;
-};
+}
 
 =head1 NAME
 
@@ -48,9 +60,17 @@ OIDC::Lite::Server::Scope - utility class for OpenID Connect Scope
 =head1 SYNOPSIS
 
     use OIDC::Lite::Server::Scope;
-    
-    # return OpenID Connect request or not
+
     my @scopes = ...
+
+    # if request doesn't inclue 'openid' and include other OIDC scope, return false
+    if(OIDC::Lite::Server::Scope->validate_scopes(\@scopes)){
+        # valid scopes
+    }else{
+        # invalid scopes
+    }    
+
+    # return OpenID Connect request or not
     if(OIDC::Lite::Server::Scope->is_openid_request(\@scopes)){
         # OpenID Connect Request
         # issue ID Token
@@ -68,11 +88,20 @@ This is utility class for OpenID Connect scope.
 
 =head1 METHODS
 
+=head2 validate_scopes( $scopes )
+
+If request doesn't inclue 'openid' and include other OIDC scope, return false.
+'openid' : true
+'not_openid' : true
+'openid profile' : true
+'profile' : false
+'not_openid profile' : false
+
 =head2 is_openid_request( $scopes )
 
 Returns the requested scope is for OpenID Connect or not.
 
-=head2 allow( $req )
+=head2 to_normal_claims( $req )
 
 Returns normal claims for requested scopes.
 

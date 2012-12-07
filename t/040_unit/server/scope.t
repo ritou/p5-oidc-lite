@@ -1,8 +1,49 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 26;
 use OIDC::Lite::Server::Scope;
+
+TEST_VALIDATE_SCOPES: {
+    my @valid_scopes = qw{openid};
+    ok(OIDC::Lite::Server::Scope->validate_scopes(\@valid_scopes));
+
+    @valid_scopes = qw{openid not_openid};
+    ok(OIDC::Lite::Server::Scope->validate_scopes(\@valid_scopes));
+
+    @valid_scopes = qw{openid profile};
+    ok(OIDC::Lite::Server::Scope->validate_scopes(\@valid_scopes));
+
+    @valid_scopes = qw{openid email};
+    ok(OIDC::Lite::Server::Scope->validate_scopes(\@valid_scopes));
+
+    @valid_scopes = qw{openid address};
+    ok(OIDC::Lite::Server::Scope->validate_scopes(\@valid_scopes));
+
+    @valid_scopes = qw{openid phone};
+    ok(OIDC::Lite::Server::Scope->validate_scopes(\@valid_scopes));
+
+    @valid_scopes = qw{openid not_openid profile};
+    ok(OIDC::Lite::Server::Scope->validate_scopes(\@valid_scopes));
+
+    @valid_scopes = qw{not_openid};
+    ok(OIDC::Lite::Server::Scope->validate_scopes(\@valid_scopes));
+
+    my @invalid_scopes = qw{profile};
+    ok(!OIDC::Lite::Server::Scope->validate_scopes(\@invalid_scopes));
+
+    @invalid_scopes = qw{email};
+    ok(!OIDC::Lite::Server::Scope->validate_scopes(\@invalid_scopes));
+
+    @invalid_scopes = qw{address};
+    ok(!OIDC::Lite::Server::Scope->validate_scopes(\@invalid_scopes));
+
+    @invalid_scopes = qw{phone};
+    ok(!OIDC::Lite::Server::Scope->validate_scopes(\@invalid_scopes));
+
+    @invalid_scopes = qw{not_openid profile};
+    ok(!OIDC::Lite::Server::Scope->validate_scopes(\@invalid_scopes));
+};
 
 TEST_IS_OPENID_REQUEST: {
     my @scopes = qw{scope1};
