@@ -74,7 +74,7 @@ TEST_TO_NORMAL_CLAIMS: {
     $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
     @expected_claims = qw{user_id name family_name given_name middle_name 
                           nickname preferred_username profile 
-                          picture website gender birthday 
+                          picture website gender birthdate 
                           zoneinfo locale updated_time};
     ok(@$claims);
     is(@$claims, @expected_claims);
