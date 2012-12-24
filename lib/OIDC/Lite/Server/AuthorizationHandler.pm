@@ -40,11 +40,14 @@ sub handle_request {
         description => "'response_type' not allowed"
     ) unless (grep { $_ eq $response_type } @$allowed_response_type);
  
-    # client_id 
+    # client_id
     my $client_id = $req->param("client_id")
         or OAuth::Lite2::Server::Error::InvalidClient->throw(
             description => "'client_id' not found"
         );
+
+    OAuth::Lite2::Server::Error::InvalidClient->throw
+        unless ($dh->validate_client_by_id($client_id));
 
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
         description => "'response_type' not allowed for this 'client_id'"
