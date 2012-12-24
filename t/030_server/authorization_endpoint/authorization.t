@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-use Test::More tests => 79;
+use Test::More tests => 80;
 
 use Plack::Request;
 use Try::Tiny;
@@ -103,6 +103,32 @@ TEST_CLIENT_ID: {
             ? $_->type : $_;
     };
     is($error_message, q{invalid_client: 'client_id' not found});
+
+    # invalid
+    $params = {
+                response_type => q{token},
+                client_id     => q{malformed},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+    };
+
+    $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    $dh = TestDataHandler->new(request => $request);
+    @allowed_response_type = qw(code token);
+    $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    undef($error_message);
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_client: });
 
     # not allowed(client_id, response_type)
     $params = {
