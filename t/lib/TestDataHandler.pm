@@ -8,9 +8,11 @@ use parent 'OIDC::Lite::Server::DataHandler';
 use String::Random;
 
 use OAuth::Lite2::Server::Error;
+use OIDC::Lite::Server::Error;
 use OIDC::Lite::Model::AuthInfo;
 use OAuth::Lite2::Model::AccessToken;
 use OIDC::Lite::Model::IDToken;
+use OIDC::Lite::Model::ClientInfo;
 
 my %ID_POD = (
     auth_info    => 0,
@@ -295,5 +297,64 @@ sub create_id_token {
     );
 }
 
-1;
+sub client_associate {
+    my ($self, $param, $access_token) = @_;
+   
+    # check access token 
+    OAuth::Lite2::Server::Error::InvalidToken->throw(
+    ) if($access_token and $access_token ne 'test_access_token');
+ 
+    # check redirect_uri
+    OIDC::Lite::Server::Error::InvalidRedirectUri->throw(
+    ) if($param->{redirect_uris} ne 'http://example.org/redirect');
 
+    # configuration parameter
+    return if($param->{application_type} and $param->{application_type} eq 'invalid');
+ 
+    # success
+    my $client_info = OIDC::Lite::Model::ClientInfo->new(
+        client_id => q{test_client_id},
+        client_secret => q{test_client_secret},
+        registration_access_token => q{test_registration_access_token},
+        expires_at => 1234567
+    );
+    return $client_info;
+}
+
+sub client_update {
+    my ($self, $param, $access_token) = @_;
+   
+    # check redirect_uri
+    OIDC::Lite::Server::Error::InvalidRedirectUri->throw(
+    ) if($param->{redirect_uris} ne 'http://example.org/redirect');
+
+    # configuration parameter
+    return if($param->{application_type} and $param->{application_type} eq 'invalid');
+ 
+    # success
+    my $client_info = OIDC::Lite::Model::ClientInfo->new(
+        client_id => q{test_client_id},
+        client_secret => q{test_client_secret},
+        registration_access_token => q{test_registration_access_token},
+        expires_at => 1234567
+    );
+    return $client_info;
+}
+
+sub rotate_secret {
+    my ($self, $access_token) = @_;
+   
+    # configuration parameter
+    return if(!$access_token or $access_token ne qw{test_access_token});
+ 
+    # success
+    my $client_info = OIDC::Lite::Model::ClientInfo->new(
+        client_id => q{test_client_id},
+        client_secret => q{test_client_secret_rotate},
+        registration_access_token => q{test_registration_access_token_rotate},
+        expires_at => 1234567
+    );
+    return $client_info;
+}
+
+1;
