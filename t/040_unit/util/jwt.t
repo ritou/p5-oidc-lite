@@ -4,7 +4,6 @@ use warnings;
 use Test::More tests => 24;
 use OIDC::Lite::Util::JWT;
 use JSON qw/decode_json encode_json/;
-use Data::Dumper;
 
 my $privkeyfile = "t/lib/private_np.pem";
 my $privkey;

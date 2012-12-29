@@ -77,6 +77,23 @@ sub create_or_update_auth_info {
     die "abstract method";
 }
 
+# methods for Dynamic Client Registration
+sub client_associate {
+    my ($self, $param, $access_token) = @_;
+    die "abstract method";
+}
+
+sub client_update {
+    my ($self, $param, $access_token) = @_;
+    die "abstract method";
+}
+
+sub rotate_secret {
+    my ($self, $access_token) = @_;
+    die "abstract method";
+}
+
+
 =head1 NAME
 
 OIDC::Lite::Server::DataHandler - Base class that specifies interface for data handler for your service.
