@@ -66,13 +66,13 @@ TEST_TO_NORMAL_CLAIMS: {
 
     @scopes = qw{openid};
     $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
-    my @expected_claims = qw{user_id};
+    my @expected_claims = qw{sub};
     ok(@$claims);
     is(@$claims, @expected_claims);
 
     @scopes = qw{openid profile};
     $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
-    @expected_claims = qw{user_id name family_name given_name middle_name 
+    @expected_claims = qw{sub name family_name given_name middle_name 
                           nickname preferred_username profile 
                           picture website gender birthdate 
                           zoneinfo locale updated_time};
@@ -81,13 +81,13 @@ TEST_TO_NORMAL_CLAIMS: {
 
     @scopes = qw{openid email};
     $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
-    @expected_claims = qw{user_id email email_verified};
+    @expected_claims = qw{sub email email_verified};
     ok(@$claims);
     is(@$claims, @expected_claims);
 
     @scopes = qw{openid phone};
     $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
-    @expected_claims = qw{user_id phone_number};
+    @expected_claims = qw{sub phone_number};
     ok(@$claims);
     is(@$claims, @expected_claims);
 };

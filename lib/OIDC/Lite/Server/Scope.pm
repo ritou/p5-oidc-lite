@@ -31,7 +31,7 @@ sub to_normal_claims{
 
     my @claims;
     foreach my $scope (@$scopes){
-        push(@claims, qw{user_id})
+        push(@claims, qw{sub})
             if($scope eq q{openid});
 
         push(@claims, qw{name family_name given_name middle_name 
