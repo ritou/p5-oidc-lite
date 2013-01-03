@@ -9,8 +9,6 @@ use OIDC::Lite::Model::ClientInfo;
 use OAuth::Lite2::ParamMethod::AuthHeader;
 use Carp ();
 
-use Data::Dumper;
-
 sub handle_request {
     my ($self, $dh) = @_;
 
