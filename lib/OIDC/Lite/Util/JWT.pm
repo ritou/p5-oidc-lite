@@ -3,6 +3,7 @@ package OIDC::Lite::Util::JWT;
 use strict;
 use warnings;
 
+use Try::Tiny;
 use Params::Validate;
 use parent 'Acme::JWT';
 use JSON qw/decode_json encode_json/;
@@ -165,6 +166,7 @@ sub header {
     try {
         $header = decode_json(decode_base64url($header_segment));
     } catch {
+        return {} if defined $_;
         return $header;
     };
 }
@@ -181,6 +183,7 @@ sub payload {
     try {
         $payload = decode_json(decode_base64url($payload_segment));
     } catch {
+        return {} if defined $_;
         return $payload;
     };
 }

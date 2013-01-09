@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 26;
 use OIDC::Lite::Util::JWT;
 use JSON qw/decode_json encode_json/;
 
@@ -121,6 +121,7 @@ TEST_HEADER: {
     my $jwt = OIDC::Lite::Util::JWT->encode(\%header, \%payload, $key);
     is(encode_json(OIDC::Lite::Util::JWT->header($jwt)), encode_json(\%header));
     is(encode_json(OIDC::Lite::Util::JWT->header('invalid_jwt')), encode_json({}));
+    is(encode_json(OIDC::Lite::Util::JWT->header('invalid_header.invalid_payload.')), encode_json({}));
 };
 
 TEST_PAYLOAD: {
@@ -134,4 +135,5 @@ TEST_PAYLOAD: {
     my $jwt = OIDC::Lite::Util::JWT->encode(\%header, \%payload, $key);
     is(encode_json(OIDC::Lite::Util::JWT->payload($jwt)), encode_json(\%payload));
     is(encode_json(OIDC::Lite::Util::JWT->payload('invalid_jwt')), encode_json({}));
+    is(encode_json(OIDC::Lite::Util::JWT->payload('invalid_header.invalid_payload.')), encode_json({}));
 };
