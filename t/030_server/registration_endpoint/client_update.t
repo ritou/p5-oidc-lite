@@ -68,7 +68,7 @@ sub test_error {
 });
 
 &test_success({
-    type            => q{client_associate},
+    type            => q{client_update},
     redirect_uris  => q{http://example.org/redirect},
 }, {
     client_id   => q{test_client_id},

@@ -29,7 +29,7 @@ OIDC::Lite::Client::Credential - Class represents dynamic client registration re
 Class represents registration response
 
 See
-http://openid.net/specs/openid-connect-registration-1_0-12.html#anchor4
+http://openid.net/specs/openid-connect-registration-1_0-14.html#anchor4
 
 =head1 ACCESSORS
 

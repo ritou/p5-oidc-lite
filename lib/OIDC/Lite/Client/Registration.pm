@@ -148,7 +148,7 @@ sub associate {
     Carp::croak "redirect_uris not found" unless (exists $args{metadata}{redirect_uris});
 
     my %params = (
-        type            => 'client_associate',
+        type            => 'client_register',
     );
     for my $key ( keys %{$args{metadata}} ) {
         unless($args{access_token} and $key eq q{access_token}){

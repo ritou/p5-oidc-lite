@@ -128,7 +128,7 @@ my $app = OIDC::Lite::Server::Endpoint::Registration->new(
     data_handler => "TestDataHandler",
 );
 $agent = OAuth::Lite2::Agent::PSGIMock->new(app => $app);
-$app->support_types(qw(client_associate client_update rotate_secret));
+$app->support_types(qw(client_register client_update rotate_secret));
 $client = OIDC::Lite::Client::Registration->new(
     registration_endpoint  => q{http://localhost/registration},
     agent             => $agent,

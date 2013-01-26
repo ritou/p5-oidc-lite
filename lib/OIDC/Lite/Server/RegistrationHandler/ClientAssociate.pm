@@ -47,7 +47,7 @@ sub handle_request {
 
 =head1 NAME
 
-OIDC::Lite::Server::RegistrationHandler::ClientAssociate - handler for 'client_associate' registration type request
+OIDC::Lite::Server::RegistrationHandler::ClientAssociate - handler for 'client_register' registration type request
 
 =head1 SYNOPSIS
 
@@ -56,7 +56,7 @@ OIDC::Lite::Server::RegistrationHandler::ClientAssociate - handler for 'client_a
 
 =head1 DESCRIPTION
 
-handler for 'client_associate' registration type request.
+handler for 'client_register' registration type request.
 
 =head1 METHODS
 
