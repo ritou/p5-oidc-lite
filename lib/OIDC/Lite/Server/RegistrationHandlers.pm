@@ -14,7 +14,7 @@ sub add_handler {
     $HANDLERS{$type} = $handler;
 }
 
-__PACKAGE__->add_handler( 'client_associate' =>
+__PACKAGE__->add_handler( 'client_register' =>
     OIDC::Lite::Server::RegistrationHandler::ClientAssociate->new );
 __PACKAGE__->add_handler( 'client_update' =>
     OIDC::Lite::Server::RegistrationHandler::ClientUpdate->new );

@@ -147,7 +147,7 @@ registration_endpoint.psgi
         my $app = OIDC::Lite::Server::Endpoint::Registration->new(
             data_handler => 'MyDataHandlerClass',
         );
-        $app->support_types(qw(client_associate client_update rotate_secret));
+        $app->support_types(qw(client_register client_update rotate_secret));
         $app;
     };
 
@@ -157,7 +157,7 @@ The object of this class behaves as PSGI application (subroutine reference).
 This is for OpenID Connect registration-endpoint.
 
 Reference spec:
-http://openid.net/specs/openid-connect-registration-1_0-12.html
+http://openid.net/specs/openid-connect-registration-1_0-14.html
 
 At first you have to make your custom class inheriting L<OIDC::Lite::Server::DataHandler>,
 and setup PSGI file with it.
@@ -184,7 +184,7 @@ This would be included in error responses.
 
 =head2 support_grant_types( @types )
 
-You can set 'client_associate, 'rotate_secret', or 'client_update'
+You can set 'client_register', 'rotate_secret', or 'client_update'
 
 =head2 data_handler
 

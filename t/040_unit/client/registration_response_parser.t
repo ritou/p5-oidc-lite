@@ -47,14 +47,14 @@ $res = HTTP::Response->new(HTTP_BAD_REQUEST,
             "",
             [ "Content-Type"  => q{application/json},
               "Cache-Control" => "no-store"  ],
-            q{{"error_code":"invalid_type","error_description":"The value of the type parameter must be one of client_associate, rotate_secret or client_update."}});
+            q{{"error_code":"invalid_type","error_description":"The value of the type parameter must be one of client_register, rotate_secret or client_update."}});
 
 try {
     $credential = $parser->parse($res, 1);
 } catch {
     $errmsg = "$_";
 };
-is($errmsg, q{{"error_code":"invalid_type","error_description":"The value of the type parameter must be one of client_associate, rotate_secret or client_update."}});
+is($errmsg, q{{"error_code":"invalid_type","error_description":"The value of the type parameter must be one of client_register, rotate_secret or client_update."}});
 
 # invalid content_type
 $res = HTTP::Response->new(HTTP_OK,

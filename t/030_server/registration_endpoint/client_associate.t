@@ -62,7 +62,7 @@ sub test_error {
 
 # success
 &test_success({
-    type            => q{client_associate},
+    type            => q{client_register},
     redirect_uris  => q{http://example.org/redirect},
 }, {
     client_id   => q{test_client_id},
@@ -73,7 +73,7 @@ sub test_error {
 
 # with access token
 &test_success({
-    type            => q{client_associate},
+    type            => q{client_register},
     redirect_uris  => q{http://example.org/redirect},
 }, {
     client_id   => q{test_client_id},
@@ -85,7 +85,7 @@ sub test_error {
 });
 
 &test_success({
-    type            => q{client_associate},
+    type            => q{client_register},
     redirect_uris  => q{http://example.org/redirect},
     access_token => q{test_access_token},
 }, {
@@ -97,11 +97,11 @@ sub test_error {
 
 
 &test_error({
-    type            => q{client_associate},
+    type            => q{client_register},
 }, q{invalid_redirect_uri: 'redirect_uris' is missing});
 
 &test_error({
-    type            => q{client_associate},
+    type            => q{client_register},
     access_token => q{test_access_token},
     redirect_uris  => q{http://example.org/redirect},
 }, 
@@ -111,7 +111,7 @@ q{invalid_request: Both Authorization header and payload includes access token.}
 });
 
 &test_error({
-    type            => q{client_associate},
+    type            => q{client_register},
     redirect_uris  => q{http://example.org/redirect},
 }, 
 q{invalid_token: },
@@ -120,20 +120,20 @@ q{invalid_token: },
 });
 
 &test_error({
-    type            => q{client_associate},
+    type            => q{client_register},
     redirect_uris  => q{http://example.org/redirect},
     access_token => q{invalid_access_token},
 }, 
 q{invalid_token: });
 
 &test_error({
-    type            => q{client_associate},
+    type            => q{client_register},
     redirect_uris  => q{http://example.org/redirect_invalid},
 }, 
 q{invalid_redirect_uri: });
 
 &test_error({
-    type            => q{client_associate},
+    type            => q{client_register},
     redirect_uris  => q{http://example.org/redirect},
     application_type => q{invalid},
 }, 
