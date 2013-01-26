@@ -26,6 +26,16 @@ sub is_openid_request{
     return (grep {$_ eq q{openid}} @$scopes);
 }
 
+sub is_required_offline_access{
+    my ($self, $scopes) = @_;
+
+    # scopes is array ref
+    return 0 unless (ref($scopes) eq 'ARRAY');
+
+    # if it has 'offline_access', return true.
+    return (grep {$_ eq q{offline_access}} @$scopes);
+}
+
 sub to_normal_claims{
     my ($self, $scopes) = @_;
 
@@ -100,6 +110,10 @@ If request doesn't inclue 'openid' and include other OIDC scope, return false.
 =head2 is_openid_request( $scopes )
 
 Returns the requested scope is for OpenID Connect or not.
+
+=head2 is_required_offline_access( $scopes )
+
+Returns the requested scope includes 'offline_access' or not.
 
 =head2 to_normal_claims( $req )
 

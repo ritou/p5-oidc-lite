@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 26;
+use Test::More tests => 30;
 use OIDC::Lite::Server::Scope;
 
 TEST_VALIDATE_SCOPES: {
@@ -57,6 +57,20 @@ TEST_IS_OPENID_REQUEST: {
 
     @scopes = qw{scope1 openid};
     ok(OIDC::Lite::Server::Scope->is_openid_request(\@scopes));
+};
+
+TEST_IS_RQUIRED_OFFLINE_ACCESS: {
+    my @scopes = qw{online_access};
+    ok(!OIDC::Lite::Server::Scope->is_required_offline_access(\@scopes));
+
+    @scopes = qw{offline_access};
+    ok(OIDC::Lite::Server::Scope->is_required_offline_access(\@scopes));
+
+    @scopes = qw{scope1 scope2};
+    ok(!OIDC::Lite::Server::Scope->is_required_offline_access(\@scopes));
+
+    @scopes = qw{scope1 offline_access};
+    ok(OIDC::Lite::Server::Scope->is_required_offline_access(\@scopes));
 };
 
 TEST_TO_NORMAL_CLAIMS: {
