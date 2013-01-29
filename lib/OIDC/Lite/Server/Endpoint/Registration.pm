@@ -86,14 +86,14 @@ sub handle_request {
     my $formatter = OAuth::Lite2::Formatters->get_formatter_by_name("json");
     my $res = try {
 
-        my $type = $request->param("type")
-            or OIDC::Lite::Server::Error::InvalidType->throw(
-                description => q{The value of type is not found},
+        my $operation = $request->param("operation")
+            or OIDC::Lite::Server::Error::InvalidOperation->throw(
+                description => q{The value of operation is not found},
             );
 
-        my $handler = $self->{registration_handlers}{$type}
-            or OIDC::Lite::Server::Error::InvalidType->throw(
-                description => q{The value of type is invalid or not supported},
+        my $handler = $self->{registration_handlers}{$operation}
+            or OIDC::Lite::Server::Error::InvalidOperation->throw(
+                description => q{The value of operation is invalid or not supported},
             );
 
         my $data_handler = $self->{data_handler}->new(request => $request);

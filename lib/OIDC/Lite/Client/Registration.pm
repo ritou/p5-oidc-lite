@@ -148,7 +148,7 @@ sub associate {
     Carp::croak "redirect_uris not found" unless (exists $args{metadata}{redirect_uris});
 
     my %params = (
-        type            => 'client_register',
+        operation            => 'client_register',
     );
     for my $key ( keys %{$args{metadata}} ) {
         unless($args{access_token} and $key eq q{access_token}){
@@ -206,7 +206,7 @@ sub update {
     Carp::croak "redirect_uris not found" unless (exists $args{metadata}{redirect_uris});
 
     my %params = (
-        type            => 'client_update',
+        operation            => 'client_update',
     );
     for my $key ( keys %{$args{metadata}} ) {
         unless($key eq q{access_token}){
@@ -257,7 +257,7 @@ sub rotate_secret {
     });
 
     my %params = (
-        type            => 'rotate_secret',
+        operation            => 'rotate_secret',
     );
 
     my $content = build_content(\%params);

@@ -62,7 +62,7 @@ sub test_error {
 
 # success
 &test_success({
-    type            => q{rotate_secret},
+    operation            => q{rotate_secret},
 }, {
     client_id   => q{test_client_id},
     client_secret   => q{test_client_secret_rotate},
@@ -73,7 +73,7 @@ sub test_error {
 });
 
 &test_success({
-    type            => q{rotate_secret},
+    operation            => q{rotate_secret},
     access_token => q{test_access_token},
 }, {
     client_id   => q{test_client_id},
@@ -83,16 +83,16 @@ sub test_error {
 });
 
 &test_error({
-    type            => q{client_rotate},
+    operation            => q{client_rotate},
 }, q{invalid_token: });
 
 &test_error({
-    type            => q{client_rotate},
+    operation            => q{client_rotate},
     access_token => q{test_access_token_invalid},
 }, q{invalid_token: });
 
 &test_error({
-    type            => q{rotate_secret},
+    operation            => q{rotate_secret},
 }, 
 q{invalid_token: },
 {

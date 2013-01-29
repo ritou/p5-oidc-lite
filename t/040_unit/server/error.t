@@ -5,33 +5,33 @@ use Test::More tests => 56;
 use Try::Tiny;
 use OIDC::Lite::Server::Error;
 
-TEST_INVALID_TYPE: {
-    my $error = OIDC::Lite::Server::Error::InvalidType->new;
+TEST_INVALID_OPERATION: {
+    my $error = OIDC::Lite::Server::Error::InvalidOperation->new;
     ok($error->isa("OIDC::Lite::Server::Error"));
-    is($error->type, "invalid_type");
+    is($error->type, "invalid_operation");
     is($error->code, 400);
     ok(!$error->state);
     ok(!$error->description);
 
     try {
-        OIDC::Lite::Server::Error::InvalidType->throw;
+        OIDC::Lite::Server::Error::InvalidOperation->throw;
     } catch {
         ok($_->isa("OIDC::Lite::Server::Error"));
         ok($_->isa("OAuth::Lite2::Server::Error"));
         is($_, $error);
     };
 
-    $error = OIDC::Lite::Server::Error::InvalidType->new(
+    $error = OIDC::Lite::Server::Error::InvalidOperation->new(
         description => q{The value of type is invalid or not supported}
     );
     ok($error->isa("OIDC::Lite::Server::Error"));
-    is($error->type, "invalid_type");
+    is($error->type, "invalid_operation");
     is($error->code, 400);
     is($error->description, q{The value of type is invalid or not supported});
     ok(!$error->state);
 
     try {
-        OIDC::Lite::Server::Error::InvalidType->throw(
+        OIDC::Lite::Server::Error::InvalidOperation->throw(
             description => q{The value of type is invalid or not supported}
         );
     } catch {

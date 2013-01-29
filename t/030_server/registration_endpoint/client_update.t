@@ -60,7 +60,7 @@ sub test_error {
 
 # success
 &test_success({
-    type            => q{client_update},
+    operation            => q{client_update},
     redirect_uris   => q{http://example.org/redirect},
     access_token    => q{test_registration_access_token},
 }, {
@@ -68,7 +68,7 @@ sub test_error {
 });
 
 &test_success({
-    type            => q{client_update},
+    operation            => q{client_update},
     redirect_uris  => q{http://example.org/redirect},
 }, {
     client_id   => q{test_client_id},
@@ -77,11 +77,11 @@ sub test_error {
 });
 
 &test_error({
-    type            => q{client_update},
+    operation            => q{client_update},
 }, q{invalid_token: });
 
 &test_error({
-    type            => q{client_update},
+    operation            => q{client_update},
     redirect_uris  => q{http://example.org/redirect},
     access_token    => q{test_registration_access_token},
 }, q{invalid_request: Both Authorization header and payload includes access token.}, {
@@ -89,12 +89,12 @@ sub test_error {
 });
 
 &test_error({
-    type            => q{client_update},
+    operation            => q{client_update},
     access_token    => q{test_registration_access_token},
 }, q{invalid_redirect_uri: 'redirect_uris' is missing});
 
 &test_error({
-    type            => q{client_update},
+    operation            => q{client_update},
     redirect_uris  => q{http://example.org/redirect_invalid},
     access_token    => q{test_registration_access_token},
 }, q{invalid_redirect_uri: });
