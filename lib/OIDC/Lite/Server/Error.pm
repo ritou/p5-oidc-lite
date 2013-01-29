@@ -54,7 +54,7 @@ L<http://openid.net/specs/openid-connect-registration-1_0-12.html#anchor7>,
 
 =over 4
 
-=item OIDC::Lite::Server::Error::InvalidType
+=item OIDC::Lite::Server::Error::InvalidOperation
 
 =item OIDC::Lite::Server::Error::InvalidClientId
 
@@ -88,10 +88,10 @@ sub description { $_[0]->{description}  }
 sub state       { $_[0]->{state}        }
 
 # OpenID Connect Server Error
-package OIDC::Lite::Server::Error::InvalidType;
+package OIDC::Lite::Server::Error::InvalidOperation;
 our @ISA = qw(OIDC::Lite::Server::Error);
 sub code { 400 }
-sub type { "invalid_type" }
+sub type { "invalid_operation" }
 
 package OIDC::Lite::Server::Error::InvalidClientId;
 our @ISA = qw(OIDC::Lite::Server::Error);
