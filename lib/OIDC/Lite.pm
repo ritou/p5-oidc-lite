@@ -2,6 +2,7 @@ package OIDC::Lite;
 
 use strict;
 use warnings;
+use 5.008_001;
 
 our $VERSION = '0.01_01';
 
