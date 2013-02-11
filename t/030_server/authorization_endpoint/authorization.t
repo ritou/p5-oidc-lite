@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-use Test::More tests => 80;
+use Test::More tests => 83;
 
 use Plack::Request;
 use Try::Tiny;
@@ -614,7 +614,8 @@ TEST_REQUEST_ALLOW: {
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
     ok(!$res->{fragment}->{code});
-    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIifQ.MoAjPCFwLGNJ9Fp02YieXURSosAhvdxP4pAds3Z31HI});
+    ok($res->{fragment}->{id_token});
+    is($res->{fragment}->{id_token}, q{eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIifQ.5N_PG_KTTFFYnwJK6Y_ljNMM5_L9ZyiDqDLEqt-nR1M});
     ok(!$res->{fragment}->{access_token});
     ok(!$res->{fragment}->{token_type});
     ok(!$res->{fragment}->{expires_in});
@@ -641,7 +642,8 @@ TEST_REQUEST_ALLOW: {
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
     is($res->{fragment}->{code}, q{code_3});
-    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIiLCJjX2hhc2giOiJ2NDR2aEJSWUU5Nk16ZkxNek5kcGhnIn0.jNXHRrRREkLSA7vgNoZHgJDjsEhA8I9ImyE5MIuVu9M});
+    ok($res->{fragment}->{id_token});
+    is($res->{fragment}->{id_token}, q{eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIiLCJjX2hhc2giOiJ2NDR2aEJSWUU5Nk16ZkxNek5kcGhnIn0.Q-IkEr82dJik_scGTvY83WRc7aCm_1shVG5Bsv8ST0k});
     ok(!$res->{fragment}->{access_token});
     ok(!$res->{fragment}->{token_type});
     ok(!$res->{fragment}->{expires_in});
@@ -695,7 +697,8 @@ TEST_REQUEST_ALLOW: {
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
     ok(!$res->{fragment}->{code});
-    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXRfaGFzaCI6IlJpalczZHJmd2dBZ0tsYWYxLWwwSmciLCJhdWQiOiJhdWRzdHIiLCJ1c2VyX2lkIjoiMSIsImlzcyI6Imlzc3N0ciJ9.-55uHaWL7Z4f-y2WM2GpVib4c3GS9RSZND53AVMeCHY});
+    ok($res->{fragment}->{id_token});
+    is($res->{fragment}->{id_token}, q{eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXRfaGFzaCI6IlJpalczZHJmd2dBZ0tsYWYxLWwwSmciLCJhdWQiOiJhdWRzdHIiLCJ1c2VyX2lkIjoiMSIsImlzcyI6Imlzc3N0ciJ9.QBG9Ix09JY6jS2UpSM3B5vsYx7sReL5T5n9S4uPiF6o});
     is($res->{fragment}->{access_token}, q{access_token_2});
     is($res->{fragment}->{token_type}, q{Bearer});
     ok($res->{fragment}->{expires_in});
@@ -722,7 +725,7 @@ TEST_REQUEST_ALLOW: {
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
     is($res->{fragment}->{code}, q{code_6});
-    is($res->{fragment}->{id_token}, q{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXRfaGFzaCI6IldQVmJyQXFOSmFPSXU0aW1QSDE5Z2ciLCJhdWQiOiJhdWRzdHIiLCJ1c2VyX2lkIjoiMSIsImlzcyI6Imlzc3N0ciIsImNfaGFzaCI6Il9QWVVfN0k1M2NwWHkxVTN4eW9hTHcifQ.AvqH9mWsO-BDBjx-zsHTmGO-58_Yn2TkXoE67rd8v5k});
+    ok($res->{fragment}->{id_token});
     is($res->{fragment}->{access_token}, q{access_token_3});
     is($res->{fragment}->{token_type}, q{Bearer});
     ok($res->{fragment}->{expires_in});

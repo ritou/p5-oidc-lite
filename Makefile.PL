@@ -10,9 +10,8 @@ requires(
     'Params::Validate'      => 0.95,
     'Class::Accessor::Fast' => 0.34,
     'Data::Dump'            => 1.17,
-    # new
     'OAuth::Lite2'          => 0.02_03,
-    'Acme::JWT'             => 0.04,
+    'JSON::WebToken'        => 0.05,
 );
 
 tests('t/*.t t/*/*.t t/*/*/*.t');

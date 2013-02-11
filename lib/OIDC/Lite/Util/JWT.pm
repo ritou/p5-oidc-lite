@@ -5,7 +5,6 @@ use warnings;
 
 use Try::Tiny;
 use Params::Validate;
-use parent 'Acme::JWT';
 use JSON qw/decode_json encode_json/;
 use MIME::Base64 qw/encode_base64url decode_base64url/;
 
@@ -32,130 +31,16 @@ JSON Web Token utility class.
 
 =head1 METHODS
 
-=head2 encode( \%header, \%payload, $key )
+=head2 header( $jwt )
 
-Encode components and return JWT string
+Returns hash reference of JWT Header.
 
-    # none
-    my %header =    (
-                        alg => 'none',
-                        typ => 'JWS',
-                    );
-    my %payload =   (
-                        foo => 'bar'
-                    );
-    my $key = '';
-    my $jwt = OIDC::Lite::Util::JWT->encode(\%header, \%payload, $key);
-    
-    # HS256
-    %header =    (
-                        alg => 'HS256',
-                        typ => 'JWS',
-                    );
-    %payload =   (
-                        foo => 'bar'
-                    );
-    $key = q{this_is_shared_secret_key};
-    $jwt = OIDC::Lite::Util::JWT->encode(\%header, \%payload, $key);
-    
-    # RS256
-    %header =    (
-                        alg => 'RS256',
-                        typ => 'JWS',
-                    );
-    %payload =   (
-                        foo => 'bar'
-                    );
-    $privkey = (you private key string);
-    $jwt = OIDC::Lite::Util::JWT->encode(\%header, \%payload, $privkey);
+    my $jwt = q{...}:
+    my $header  = OIDC::Lite::Util::JWT::header($jwt);
 
 =cut
-
-sub encode {
-    my $self = shift;
-    my ($header, $payload, $key) = @_;
-    my $algorithm = defined($header->{alg}) ? $header->{alg} : JWT_ALG_NONE;
-
-    my $segments = [];
-    push(@$segments, encode_base64url(encode_json($header)));
-    push(@$segments, encode_base64url(encode_json($payload)));
-    my $signing_input = join('.', @$segments);
-
-    unless ($algorithm eq JWT_ALG_NONE) {
-        my $signature = $self->sign($algorithm, $key, $signing_input);
-        push(@$segments, encode_base64url($signature));
-    } else {
-        push(@$segments, '');
-    }
-    return join('.', @$segments);
-}
-
-=head2 verify( $token_string, $key )
-
-Verify JWT Signature with key
-
-    my $jwt = '(JWT string)';
-    if(OIDC::Lite::Util::JWT->verify($jwt, $key){
-        # valid
-    }else{
-        # invalid
-    }
-
-=cut
-
-sub verify{
-    my $self = shift;
-    my ($token_string, $key) = @_;
-    my $segments = [split(/\./, $token_string)];
-    return 0
-        unless (@$segments == 2 or @$segments == 3);
-    
-    push(@$segments, '') if(@$segments == 2);
-    my ($header_segment, $payload_segment, $crypt_segment) = @$segments;
-    my $header = decode_json(decode_base64url($header_segment));
-
-    my $algorithm = defined($header->{alg}) ? $header->{alg} : JWT_ALG_NONE;
-    return 0 unless ($algorithm eq JWT_ALG_NONE || $self->valid_algorithm($algorithm));
-
-    my $signing_input = $header_segment.'.'.$payload_segment;
-    unless ($algorithm eq JWT_ALG_NONE) {
-        my $alg_prefix = substr($algorithm, 0, JWT_ALG_LEN);
-        if($alg_prefix eq JWT_ALG_HMAC){
-            my $signature = $self->sign($algorithm, $key, $signing_input);
-            return ($crypt_segment eq encode_base64url($signature));
-        }elsif($alg_prefix eq JWT_ALG_RSA){
-            my $signature = decode_base64url($crypt_segment);
-            return $self->verify_rsa($algorithm, $key, $signing_input, $signature);
-        }else{
-            # ES is not supported
-            return 0;
-        }
-    } else {
-        return ($crypt_segment eq '');
-    }
-
-    return ($token_string eq join('.', @$segments));
-}
-
-sub valid_algorithm{
-    my $self = shift;
-    my ($algorithm) = @_;
-    return 0 unless(length($algorithm) == 5);
-
-    my $alg_prefix = substr($algorithm, 0, JWT_ALG_LEN);
-    return 0 unless($alg_prefix eq JWT_ALG_HMAC or 
-                    $alg_prefix eq JWT_ALG_RSA  or
-                    $alg_prefix eq JWT_ALG_ECDSA);
-
-    my $alg_bits = substr($algorithm, JWT_ALG_LEN, JWT_BITS_LEN);
-    return 0 unless($alg_bits eq '256' or 
-                    $alg_bits eq '384' or
-                    $alg_bits eq '512');
-    return 1;
-}
 
 sub header {
-    my $self = shift;
     my ($jwt) = @_;
     my $segments = [split(/\./, $jwt)];
     return {}
@@ -171,8 +56,16 @@ sub header {
     };
 }
 
+=head2 payload( $jwt )
+
+Returns hash reference of JWT Payload.
+
+    my $jwt = q{...}:
+    my $payload  = OIDC::Lite::Util::JWT::payload($jwt);
+
+=cut
+
 sub payload {
-    my $self = shift;
     my ($jwt) = @_;
     my $segments = [split(/\./, $jwt)];
     return {}
@@ -187,10 +80,6 @@ sub payload {
         return $payload;
     };
 }
-
-=head1 SEE ALSO
-
-L<Acme::JWT>
 
 =head1 AUTHOR
 
