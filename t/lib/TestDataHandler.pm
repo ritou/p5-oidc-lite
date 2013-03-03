@@ -316,7 +316,10 @@ sub client_associate {
         client_id => q{test_client_id},
         client_secret => q{test_client_secret},
         registration_access_token => q{test_registration_access_token},
-        expires_at => 1234567
+        expires_at => 1234567,
+        metadata => {
+            redirect_uris => $param->{redirect_uris},
+        }
     );
     return $client_info;
 }
@@ -330,13 +333,16 @@ sub client_update {
 
     # configuration parameter
     return if($param->{application_type} and $param->{application_type} eq 'invalid');
- 
+
     # success
     my $client_info = OIDC::Lite::Model::ClientInfo->new(
         client_id => q{test_client_id},
         client_secret => q{test_client_secret},
         registration_access_token => q{test_registration_access_token},
-        expires_at => 1234567
+        expires_at => 1234567,
+        metadata => {
+            redirect_uris => $param->{redirect_uris},
+        }
     );
     return $client_info;
 }

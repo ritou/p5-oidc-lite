@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-use Test::More tests => 18;
+use Test::More tests => 21;
 
 use Plack::Request;
 use Try::Tiny;
@@ -38,6 +38,7 @@ sub test_success {
     is($res->{client_secret}, $expected->{client_secret});
     is($res->{registration_access_token}, $expected->{registration_access_token});
     is($res->{expires_at}, $expected->{expires_at});
+    is($res->{redirect_uris}, $expected->{redirect_uris});
 }
 sub test_error {
     my $params = shift;
@@ -69,6 +70,7 @@ sub test_error {
     client_secret   => q{test_client_secret},
     registration_access_token   => q{test_registration_access_token},
     expires_at   => 1234567,
+    redirect_uris  => q{http://example.org/redirect},
 });
 
 # with access token
@@ -80,6 +82,7 @@ sub test_error {
     client_secret   => q{test_client_secret},
     registration_access_token   => q{test_registration_access_token},
     expires_at   => 1234567,
+    redirect_uris  => q{http://example.org/redirect},
 }, {
     access_token_header => q{test_access_token},
 });
@@ -93,6 +96,7 @@ sub test_error {
     client_secret   => q{test_client_secret},
     registration_access_token   => q{test_registration_access_token},
     expires_at   => 1234567,
+    redirect_uris  => q{http://example.org/redirect},
 });
 
 

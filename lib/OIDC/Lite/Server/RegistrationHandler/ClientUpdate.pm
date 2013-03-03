@@ -43,6 +43,7 @@ sub handle_request {
         client_id => $client_info->client_id,
     };
 
+    $res = {%{$res}, %{$client_info->metadata}} if ($client_info->metadata);
     return $res;
 }
 

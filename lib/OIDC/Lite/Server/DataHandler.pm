@@ -78,11 +78,14 @@ sub create_or_update_auth_info {
 }
 
 # methods for Dynamic Client Registration
+# spec supported http://openid.net/specs/openid-connect-registration-1_0-14.html
+## register and return client metadata
 sub client_associate {
     my ($self, $param, $access_token) = @_;
     die "abstract method";
 }
 
+## update and return client metadata
 sub client_update {
     my ($self, $param, $access_token) = @_;
     die "abstract method";
