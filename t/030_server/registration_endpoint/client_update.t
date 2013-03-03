@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 use Plack::Request;
 use Try::Tiny;
@@ -35,6 +35,7 @@ sub test_success {
     };
 
     is($res->{client_id}, $expected->{client_id});
+    is($res->{redirect_uris}, $expected->{redirect_uris});
 }
 
 sub test_error {
@@ -65,6 +66,7 @@ sub test_error {
     access_token    => q{test_registration_access_token},
 }, {
     client_id   => q{test_client_id},
+    redirect_uris   => q{http://example.org/redirect},
 });
 
 &test_success({
@@ -72,6 +74,7 @@ sub test_error {
     redirect_uris  => q{http://example.org/redirect},
 }, {
     client_id   => q{test_client_id},
+    redirect_uris   => q{http://example.org/redirect},
 }, {
     access_token_header => q{test_access_token},
 });

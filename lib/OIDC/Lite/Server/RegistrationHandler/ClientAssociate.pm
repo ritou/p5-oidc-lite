@@ -42,6 +42,7 @@ sub handle_request {
         expires_at => $client_info->expires_at,
     };
 
+    $res = {%{$res}, %{$client_info->metadata}} if ($client_info->metadata);
     return $res;
 }
 

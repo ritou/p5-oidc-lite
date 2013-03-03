@@ -10,6 +10,7 @@ __PACKAGE__->mk_accessors(qw(
     client_secret
     registration_access_token
     expires_at
+    metadata
 ));
 
 use Params::Validate;
@@ -24,6 +25,7 @@ sub new {
             client_secret   => { optional => 1 },
             redistration_access_token   => { optional => 1 },
             expires_at => { optional => 1 },
+            metadata => { optional => 1 },
         },
         allow_extra => 1,
     );
@@ -44,6 +46,8 @@ OIDC::Lite::Model::ClientInfo - model class that represents client info.
 =head2 registration_access_token;
 
 =head2 expires_in
+
+=head2 metadata
 
 =head1 AUTHOR
 
