@@ -28,12 +28,13 @@ lib/OIDC/Lite/Server/Endpoint/Token.pm
 lib/OIDC/Lite/Server/Error.pm
 lib/OIDC/Lite/Server/GrantHandler/AuthorizationCode.pm
 lib/OIDC/Lite/Server/GrantHandlers.pm
+lib/OIDC/Lite/Server/RegistrationHandler.pm
 lib/OIDC/Lite/Server/RegistrationHandler/ClientAssociate.pm
 lib/OIDC/Lite/Server/RegistrationHandler/ClientUpdate.pm
 lib/OIDC/Lite/Server/RegistrationHandler/RotateSecret.pm
-lib/OIDC/Lite/Server/RegistrationHandler.pm
 lib/OIDC/Lite/Server/RegistrationHandlers.pm
 lib/OIDC/Lite/Server/Scope.pm
+lib/OIDC/Lite/Server/SessionHandler.pm
 lib/OIDC/Lite/Util/JWT.pm
 lib/Plack/Middleware/Auth/OIDC/ProtectedResource.pm
 Makefile.PL
@@ -46,6 +47,7 @@ t/030_server/protected_resource/middleware.t
 t/030_server/registration_endpoint/client_associate.t
 t/030_server/registration_endpoint/client_update.t
 t/030_server/registration_endpoint/rotate_secret.t
+t/030_server/session_endpoint/session.t
 t/030_server/token_endpoint/authorization_code.t
 t/040_unit/client/credential.t
 t/040_unit/client/registration.t
@@ -57,9 +59,9 @@ t/040_unit/model/id_token.t
 t/040_unit/server/error.t
 t/040_unit/server/scope.t
 t/040_unit/util/jwt.t
+t/lib/private_np.pem
+t/lib/public.pem
 t/lib/TestAccessToken.pm
 t/lib/TestAuthInfo.pm
 t/lib/TestDataHandler.pm
 t/lib/TestPR.pm
-t/lib/private_np.pem
-t/lib/public.pem
