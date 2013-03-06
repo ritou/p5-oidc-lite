@@ -96,17 +96,6 @@ sub rotate_secret {
     die "abstract method";
 }
 
-# methods for Session Management
-sub get_javascript_origin_uris_from_client_id{
-    my ($self, $client_id) = @_;
-    die "abstract method";
-}
-
-sub get_ops{
-    my ($self, $client_id) = @_;
-    die "abstract method";
-}
-
 =head1 NAME
 
 OIDC::Lite::Server::DataHandler - Base class that specifies interface for data handler for your service.
@@ -189,14 +178,6 @@ Return OIDC::Lite::Model::ClientInfo object.
 =head2 rotate_secret($access_token)
 
 Return OIDC::Lite::Model::ClientInfo object.
-
-=head2 get_javascript_origin_uris_from_client_id($client_id)
-
-Return array_reference of registered javascript origin uris
-
-=head2 get_ops($client_id)
-
-Return ops string of current session.
 
 =head1 AUTHOR
 

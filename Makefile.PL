@@ -19,7 +19,8 @@ tests('t/*.t t/*/*.t t/*/*/*.t');
 #author_tests('xt');
 test_requires(
     'Test::More' => 0,
-    #    'Test::Class' => 0,
+    'Test::Mock::LWP::Conditional' => 0,
+    'Crypt::OpenSSL::RSA' => 0,
 );
 
 auto_include;

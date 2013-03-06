@@ -363,17 +363,4 @@ sub rotate_secret {
     return $client_info;
 }
 
-# methods for Session Management
-sub get_javascript_origin_uris_from_client_id{
-    my ($self, $client_id) = @_;
-    return if ($client_id eq 'malformed');
-    return ['http://example.com'];
-}
-
-sub get_ops{
-    my ($self, $client_id) = @_;
-    return '' unless ($client_id eq 'test_client_id');
-    return 'test_ops';
-}
-
 1;

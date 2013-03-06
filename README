@@ -13,6 +13,7 @@ SEE ALSO
     Server
 
     OIDC::Lite::Server::Endpoint::Token
+    OIDC::Lite::Server::Endpoint::Registration
     Plack::Middleware::Auth::OIDC::ProtectedResource
 
 AUTHOR

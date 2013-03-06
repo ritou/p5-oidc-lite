@@ -1,4 +1,7 @@
 Revision history for Perl extension OIDC::Lite
 
+0.02  Thu Mar 7 00:00:00 2013
+        - added test_require modules
+        - removed Session related modules
 0.01  Sun Mar 3 00:00:00 2013
         - initial version
