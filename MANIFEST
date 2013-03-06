@@ -1,6 +1,7 @@
 .shipit
 bin/token.psgi
 Changes
+inc/Crypt/OpenSSL/RSA.pm
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
@@ -10,6 +11,7 @@ inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
+inc/Test/Mock/LWP/Conditional.pm
 inc/Test/More.pm
 lib/OIDC/Lite.pm
 lib/OIDC/Lite/Client/Credential.pm
@@ -34,7 +36,6 @@ lib/OIDC/Lite/Server/RegistrationHandler/ClientUpdate.pm
 lib/OIDC/Lite/Server/RegistrationHandler/RotateSecret.pm
 lib/OIDC/Lite/Server/RegistrationHandlers.pm
 lib/OIDC/Lite/Server/Scope.pm
-lib/OIDC/Lite/Server/SessionHandler.pm
 lib/OIDC/Lite/Util/JWT.pm
 lib/Plack/Middleware/Auth/OIDC/ProtectedResource.pm
 Makefile.PL
@@ -47,7 +48,6 @@ t/030_server/protected_resource/middleware.t
 t/030_server/registration_endpoint/client_associate.t
 t/030_server/registration_endpoint/client_update.t
 t/030_server/registration_endpoint/rotate_secret.t
-t/030_server/session_endpoint/session.t
 t/030_server/token_endpoint/authorization_code.t
 t/040_unit/client/credential.t
 t/040_unit/client/registration.t
