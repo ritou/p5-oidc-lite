@@ -12,6 +12,7 @@ requires(
     'Data::Dump'            => 1.17,
     'OAuth::Lite2'          => 0.03,
     'JSON::WebToken'        => 0.05,
+    'JSON::XS'              => 0,
 );
 
 tests('t/*.t t/*/*.t t/*/*/*.t');

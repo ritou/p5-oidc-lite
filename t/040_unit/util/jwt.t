@@ -4,7 +4,7 @@ use warnings;
 use Test::More tests => 6;
 use JSON::WebToken;
 use OIDC::Lite::Util::JWT;
-use JSON qw/decode_json encode_json/;
+use JSON::XS qw/decode_json encode_json/;
 
 TEST_HEADER: {
     my %header =    (

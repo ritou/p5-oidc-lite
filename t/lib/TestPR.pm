@@ -11,7 +11,7 @@ use Plack::Request;
 use Try::Tiny;
 use Params::Validate;
 use TestDataHandler;
-use JSON qw/decode_json encode_json/;
+use JSON::XS qw/decode_json encode_json/;
 
 use Plack::Middleware::Auth::OIDC::ProtectedResource;
 
