@@ -89,7 +89,7 @@ TEST_TO_NORMAL_CLAIMS: {
     @expected_claims = qw{sub name family_name given_name middle_name 
                           nickname preferred_username profile 
                           picture website gender birthdate 
-                          zoneinfo locale updated_time};
+                          zoneinfo locale updated_at};
     ok(@$claims);
     is(@$claims, @expected_claims);
 
@@ -101,7 +101,7 @@ TEST_TO_NORMAL_CLAIMS: {
 
     @scopes = qw{openid phone};
     $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
-    @expected_claims = qw{sub phone_number};
+    @expected_claims = qw{sub phone_number phone_number_verified};
     ok(@$claims);
     is(@$claims, @expected_claims);
 };

@@ -3,6 +3,8 @@ package OIDC::Lite::Server::Scope;
 use strict;
 use warnings;
 
+sub optional_scopes{ return qw{profile email address phone offline_access}; }
+
 sub validate_scopes{
     my ($self, $scopes) = @_;
 
@@ -47,7 +49,7 @@ sub to_normal_claims{
         push(@claims, qw{name family_name given_name middle_name 
                          nickname preferred_username profile 
                          picture website gender birthdate 
-                         zoneinfo locale updated_time})
+                         zoneinfo locale updated_at})
             if($scope eq q{profile});
 
         push(@claims, qw(email email_verified))
@@ -56,7 +58,7 @@ sub to_normal_claims{
         push(@claims, qw{address})
             if($scope eq q{address});
 
-        push(@claims, qw{phone_number})
+        push(@claims, qw{phone_number phone_number_verified})
             if($scope eq q{phone});
     }
 
