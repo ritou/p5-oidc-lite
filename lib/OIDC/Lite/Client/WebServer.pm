@@ -18,7 +18,6 @@ use OAuth::Lite2;
 use OAuth::Lite2::Util qw(build_content);
 use OAuth::Lite2::Formatters;
 use OIDC::Lite::Client::TokenResponseParser;
-use MIME::Base64 qw(encode_base64);
 
 =head1 NAME
 
@@ -273,7 +272,7 @@ sub get_access_token {
     my $headers = HTTP::Headers->new;
     $headers->header("Content-Type" => q{application/x-www-form-urlencoded});
     $headers->header("Content-Length" => bytes::length($content));
-    $headers->header("Authorization" => sprintf(q{Basic %s}, encode_base64($self->{id}.":".$self->{secret},''))) 
+    $headers->authorization_basic($self->{id}, $self->{secret})
         if($args{use_basic_schema});
     my $req = HTTP::Request->new( POST => $args{uri}, $headers, $content );
 
@@ -331,7 +330,7 @@ sub refresh_access_token {
     my $headers = HTTP::Headers->new;
     $headers->header("Content-Type" => q{application/x-www-form-urlencoded});
     $headers->header("Content-Length" => bytes::length($content));
-    $headers->header("Authorization" => sprintf(q{Basic %s}, encode_base64($self->{id}.":".$self->{secret},''))) 
+    $headers->authorization_basic($self->{id}, $self->{secret})
         if($args{use_basic_schema});
     my $req = HTTP::Request->new( POST => $args{uri}, $headers, $content );
 

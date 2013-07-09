@@ -6,7 +6,7 @@ use warnings;
 use base 'Class::Accessor::Fast';
 use Params::Validate;
 use OIDC::Lite::Util::JWT;
-use JSON::WebToken;
+use JSON::WebToken qw/encode_jwt decode_jwt/;
 use MIME::Base64 qw/encode_base64url decode_base64url/;
 use Digest::SHA qw/sha256 sha384 sha512/;
 use constant HALF_BITS_DENOMINATOR => 2 * 8;
@@ -99,7 +99,7 @@ sub get_token_string {
         unless($self->header->{alg});
 
     # generate token string
-    my $jwt = JSON::WebToken->encode($self->payload, $self->key, $self->header->{alg}, $self->header);
+    my $jwt = encode_jwt($self->payload, $self->key, $self->header->{alg}, $self->header);
     $self->token_string($jwt);
     return $jwt;
 }
@@ -196,9 +196,9 @@ sub verify {
 
     my $payload = undef;
     eval{
-        $payload = JSON::WebToken->decode($self->token_string, $self->key);
+        $payload = decode_jwt($self->token_string, $self->key);
     };
-    if(my $e = $a){
+    if($@){
         return 0;
     }
     return (defined($payload));

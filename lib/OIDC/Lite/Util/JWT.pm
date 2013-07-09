@@ -5,7 +5,7 @@ use warnings;
 
 use Try::Tiny;
 use Params::Validate;
-use JSON::XS qw/decode_json encode_json/;
+use JSON qw/decode_json encode_json/;
 use MIME::Base64 qw/encode_base64url decode_base64url/;
 
 use constant {

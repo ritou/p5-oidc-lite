@@ -11,8 +11,8 @@ requires(
     'Class::Accessor::Fast' => 0.34,
     'Data::Dump'            => 1.17,
     'OAuth::Lite2'          => 0.03,
-    'JSON::WebToken'        => 0.05,
-    'JSON::XS'              => 0,
+    'JSON::WebToken'        => 0.07,
+    'JSON'                  => 0,
 );
 
 tests('t/*.t t/*/*.t t/*/*/*.t');
