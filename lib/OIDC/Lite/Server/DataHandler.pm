@@ -37,6 +37,36 @@ sub validate_prompt {
     return 1;
 }
 
+sub validate_max_age {
+    my ($self, $param) = @_;
+    die "abstract method";
+    return 1;
+}
+
+sub validate_ui_locales {
+    my ($self, $ui_locales) = @_;
+    die "abstract method";
+    return 1;
+}
+
+sub validate_claims_locales {
+    my ($self, $claims_locales) = @_;
+    die "abstract method";
+    return 1;
+}
+
+sub validate_id_token_hint {
+    my ($self, $param) = @_;
+    die "abstract method";
+    return 1;
+}
+
+sub validate_login_hint {
+    my ($self, $param) = @_;
+    die "abstract method";
+    return 1;
+}
+
 sub validate_request {
     my ($self, $param) = @_;
     die "abstract method";
@@ -45,12 +75,6 @@ sub validate_request {
 
 sub validate_request_uri {
     my ($self, $param) = @_;
-    die "abstract method";
-    return 1;
-}
-
-sub validate_id_token {
-    my ($self, $id_token) = @_;
     die "abstract method";
     return 1;
 }
@@ -143,6 +167,36 @@ If it's OK, return 1. Return 0 if not.
 =head2 validate_prompt( $prompt )
 
 Validation of prompt param.
+If it's OK, return 1. Return 0 if not.
+
+=head2 validate_max_age( $aram )
+
+Validation of max_age param.
+If it's OK, return 1. Return 0 if not.
+
+=head2 validate_ui_locales_( $ui_locales )
+
+Validation of ui_locales param.
+If it's OK, return 1. Return 0 if not.
+
+=head2 validate_claims_locales_( $claims_locales )
+
+Validation of claims_locales param.
+If it's OK, return 1. Return 0 if not.
+
+=head2 validate_id_token_hint( $param )
+
+Validation of id_token_hint param.
+If it's OK, return 1. Return 0 if not.
+
+=head2 validate_login_hint( $param )
+
+Validation of login_hint param.
+If it's OK, return 1. Return 0 if not.
+
+=head2 validate_acr_values( $param 
+
+Validation of acr_values param.
 If it's OK, return 1. Return 0 if not.
 
 =head2 validate_request( $param )

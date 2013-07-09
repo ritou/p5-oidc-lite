@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-use Test::More tests => 83;
+use Test::More tests => 88;
 
 use Plack::Request;
 use Try::Tiny;
@@ -328,6 +328,192 @@ TEST_PROMPT: {
 
 };
 
+TEST_MAX_AGE: {
+
+    # invalid
+    my $params = {
+                response_type => q{code},
+                client_id     => q{client_id_1},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+                max_age       => -1,
+    };
+
+    my $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    my $dh = TestDataHandler->new(request => $request);
+    my @allowed_response_type = ("code", "token", "id_token token");
+    my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    my $error_message;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_request: 'max_age' is invalid});
+
+};
+
+TEST_UI_LOCALES: {
+
+    # invalid
+    my $params = {
+                response_type => q{code},
+                client_id     => q{client_id_1},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+                ui_locales    => q{invalid},
+    };
+
+    my $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    my $dh = TestDataHandler->new(request => $request);
+    my @allowed_response_type = ("code", "token", "id_token token");
+    my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    my $error_message;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_request: 'ui_locales' is invalid});
+
+};
+
+TEST_CLAIMS_LOCALES: {
+
+    # invalid
+    my $params = {
+                response_type   => q{code},
+                client_id       => q{client_id_1},
+                redirect_uri    => q{http://rp.example.org/redirect},
+                scope           => q{openid},
+                claims_locales  => q{invalid},
+    };
+
+    my $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    my $dh = TestDataHandler->new(request => $request);
+    my @allowed_response_type = ("code", "token", "id_token token");
+    my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    my $error_message;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_request: 'claims_locales' is invalid});
+
+};
+
+TEST_REQUEST_ID_TOKEN_HINT: {
+
+    # invalid
+    my $params = {
+                response_type => q{code},
+                client_id     => q{client_id_1},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+                id_token_hint => q{invalid},
+    };
+
+    my $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    my $dh = TestDataHandler->new(request => $request);
+    my @allowed_response_type = ("code", "token", "id_token token");
+    my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    my $error_message;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_request: 'id_token_hint' is invalid});
+
+};
+
+TEST_REQUEST_LOGIN_HINT: {
+
+    # invalid
+    my $params = {
+                response_type   => q{code},
+                client_id       => q{client_id_1},
+                redirect_uri    => q{http://rp.example.org/redirect},
+                scope           => q{openid},
+                login_hint      => q{invalid},
+    };
+
+    my $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    my $dh = TestDataHandler->new(request => $request);
+    my @allowed_response_type = ("code", "token", "id_token token");
+    my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    my $error_message;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_request: 'login_hint' is invalid});
+
+};
+
+TEST_REQUEST_ACR_VALUES: {
+
+    # invalid
+    my $params = {
+                response_type   => q{code},
+                client_id       => q{client_id_1},
+                redirect_uri    => q{http://rp.example.org/redirect},
+                scope           => q{openid},
+                acr_values      => q{invalid},
+    };
+
+    my $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    my $dh = TestDataHandler->new(request => $request);
+    my @allowed_response_type = ("code", "token", "id_token token");
+    my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    my $error_message;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_request: 'acr_values' is invalid});
+
+};
+
 TEST_REQUEST: {
 
     # invalid
@@ -387,37 +573,6 @@ TEST_REQUEST_URI: {
             ? $_->type : $_;
     };
     is($error_message, q{invalid_request: 'request_uri' is invalid});
-
-};
-
-TEST_REQUEST_ID_TOKEN: {
-
-    # invalid
-    my $params = {
-                response_type => q{code},
-                client_id     => q{client_id_1},
-                redirect_uri  => q{http://rp.example.org/redirect},
-                scope         => q{openid},
-                id_token      => q{invalid},
-    };
-
-    my $request = Plack::Request->new({
-                REQUEST_URI    => q{http://example.org/authorize},
-                REQUEST_METHOD => q{GET},
-                QUERY_STRING   => build_content($params),
-    });
-
-    my $dh = TestDataHandler->new(request => $request);
-    my @allowed_response_type = ("code", "token", "id_token token");
-    my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
-    my $error_message;
-    try {
-        $authz_handler->handle_request();
-    } catch {
-        $error_message = ($_->isa("OAuth::Lite2::Error"))
-            ? $_->type : $_;
-    };
-    is($error_message, q{invalid_request: 'id_token' is invalid});
 
 };
 

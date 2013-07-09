@@ -256,6 +256,36 @@ sub validate_prompt{
     return (!$prompt || $prompt ne "invalid");
 }
 
+sub validate_max_age{
+    my ($self, $param) = @_;
+    return (!$param->{max_age} || $param->{max_age} > 0);
+}
+
+sub validate_ui_locales{
+    my ($self, $ui_locales) = @_;
+    return (!$ui_locales || $ui_locales ne "invalid");
+}
+
+sub validate_claims_locales{
+    my ($self, $claims_locales) = @_;
+    return (!$claims_locales || $claims_locales ne "invalid");
+}
+
+sub validate_id_token_hint{
+    my ($self, $param) = @_;
+    return (!$param->{id_token_hint} || $param->{id_token_hint} ne "invalid");    
+}
+
+sub validate_login_hint{
+    my ($self, $param) = @_;
+    return (!$param->{login_hint} || $param->{login_hint} ne "invalid");    
+}
+
+sub validate_acr_values{
+    my ($self, $param) = @_;
+    return (!$param->{acr_values} || $param->{acr_values} ne "invalid");    
+}
+
 sub validate_request{
     my ($self, $param) = @_;
     return (!$param->{request} || $param->{request} ne "invalid");
@@ -264,11 +294,6 @@ sub validate_request{
 sub validate_request_uri{
     my ($self, $param) = @_;
     return (!$param->{request_uri} || $param->{request_uri} ne "invalid");
-}
-
-sub validate_id_token{
-    my ($self, $id_token) = @_;
-    return (!$id_token || $id_token ne "invalid");
 }
 
 sub get_user_id_for_authorization {

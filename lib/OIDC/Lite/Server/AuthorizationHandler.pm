@@ -6,6 +6,20 @@ use warnings;
 use OAuth::Lite2::Server::Error;
 use Carp ();
 
+my @DEFINED_DISPLAY_PARAMS = qw(
+    page
+    popup
+    touch
+    wap
+);
+
+my @DEFINED_PROMPT_PARAMS = qw(
+    none
+    login
+    consent
+    select_account
+);
+
 sub new {
     my $class = shift;
     my %args = Params::Validate::validate(@_, {
@@ -68,6 +82,7 @@ sub handle_request {
     OAuth::Lite2::Server::Error::InvalidScope->throw
         unless ($dh->validate_scope($client_id, $scope));
 
+    ## optional parameters
     # nonce
     my $nonce = $req->param("nonce");
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
@@ -78,13 +93,52 @@ sub handle_request {
     my $display = $req->param("display");
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
         description => "'display' is invalid"
-    ) unless ($dh->validate_display($display));
+    ) unless (  !$display ||
+                (   grep { $_ eq $display } @DEFINED_DISPLAY_PARAMS &&
+                    $dh->validate_display($display)));
 
     # prompt
     my $prompt = $req->param("prompt");
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
         description => "'prompt' is invalid"
-    ) unless ($dh->validate_prompt($prompt));
+    ) unless (  !$prompt ||
+                (   grep { $_ eq $prompt } @DEFINED_PROMPT_PARAMS &&
+                    $dh->validate_prompt($prompt)));
+
+    # max_age
+    OAuth::Lite2::Server::Error::InvalidRequest->throw(
+        description => "'max_age' is invalid"
+    ) unless ($dh->validate_max_age($req->parameters()));
+
+    # ui_locales
+    my $ui_locales = $req->param("ui_locales");
+    OAuth::Lite2::Server::Error::InvalidRequest->throw(
+        description => "'ui_locales' is invalid"
+    ) unless ($dh->validate_ui_locales($ui_locales));
+
+    # claims_locales
+    my $claims_locales = $req->param("claims_locales");
+    OAuth::Lite2::Server::Error::InvalidRequest->throw(
+        description => "'claims_locales' is invalid"
+    ) unless ($dh->validate_claims_locales($claims_locales));
+
+    # id_token_hint
+    my $id_token_hint = $req->param("id_token_hint");
+    OAuth::Lite2::Server::Error::InvalidRequest->throw(
+        description => "'id_token_hint' is invalid"
+    ) unless ($dh->validate_id_token_hint($req->parameters));
+
+    # login_hint
+    my $login_hint = $req->param("login_hint");
+    OAuth::Lite2::Server::Error::InvalidRequest->throw(
+        description => "'login_hint' is invalid"
+    ) unless ($dh->validate_login_hint($req->parameters));
+
+    # acr_values
+    my $acr_values = $req->param("acr_values");
+    OAuth::Lite2::Server::Error::InvalidRequest->throw(
+        description => "'acr_values' is invalid"
+    ) unless ($dh->validate_acr_values($req->parameters()));
 
     # request
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
@@ -96,11 +150,6 @@ sub handle_request {
         description => "'request_uri' is invalid"
     ) unless ($dh->validate_request_uri($req->parameters()));
 
-    # id_token
-    my $id_token = $req->param("id_token");
-    OAuth::Lite2::Server::Error::InvalidRequest->throw(
-        description => "'id_token' is invalid"
-    ) unless ($dh->validate_id_token($id_token));
 }
 
 sub allow {
