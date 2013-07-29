@@ -48,12 +48,11 @@ sub header {
 
     my ($header_segment, $payload_segment, $crypt_segment) = @$segments;
     my $header;
-    try {
+    eval {
         $header = decode_json(decode_base64url($header_segment));
-    } catch {
-        return {} if defined $_;
-        return $header;
     };
+    return {} if $@;
+    return $header;
 }
 
 =head2 payload( $jwt )
@@ -73,12 +72,11 @@ sub payload {
 
     my ($header_segment, $payload_segment, $crypt_segment) = @$segments;
     my $payload;
-    try {
+    eval {
         $payload = decode_json(decode_base64url($payload_segment));
-    } catch {
-        return {} if defined $_;
-        return $payload;
     };
+    return {} if $@;
+    return $payload;
 }
 
 =head1 AUTHOR

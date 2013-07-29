@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More;
 use JSON::WebToken;
 use OIDC::Lite::Util::JWT;
 use JSON::XS qw/decode_json encode_json/;
@@ -35,3 +35,5 @@ TEST_PAYLOAD: {
     is(encode_json(OIDC::Lite::Util::JWT::payload('invalid_jwt')), encode_json({}));
     is(encode_json(OIDC::Lite::Util::JWT::payload('invalid_header.invalid_payload.')), encode_json({}));
 };
+
+done_testing;
