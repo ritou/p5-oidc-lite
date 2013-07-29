@@ -67,8 +67,7 @@
       },
       "homepage" : "https://github.com/ritou/p5-oidc-lite",
       "repository" : {
-         "type" : "git",
-         "url" : "git://github.com/ritou/p5-oidc-lite.git",
+         "url" : "https://github.com/ritou/p5-oidc-lite.git",
          "web" : "https://github.com/ritou/p5-oidc-lite"
       }
    },
