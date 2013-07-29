@@ -101,25 +101,6 @@ sub create_or_update_auth_info {
     die "abstract method";
 }
 
-# methods for Dynamic Client Registration
-# spec supported http://openid.net/specs/openid-connect-registration-1_0-14.html
-## register and return client metadata
-sub client_associate {
-    my ($self, $param, $access_token) = @_;
-    die "abstract method";
-}
-
-## update and return client metadata
-sub client_update {
-    my ($self, $param, $access_token) = @_;
-    die "abstract method";
-}
-
-sub rotate_secret {
-    my ($self, $access_token) = @_;
-    die "abstract method";
-}
-
 =head1 NAME
 
 OIDC::Lite::Server::DataHandler - Base class that specifies interface for data handler for your service.
@@ -233,18 +214,6 @@ Return OIDC::Lite::Model::IDToken object.
 =head2 create_or_update_auth_info(%args) 
 
 Return OIDC::Lite::Model::AuthInfo object.
-
-=head2 client_associate($param, $access_token) 
-
-Return OIDC::Lite::Model::ClientInfo object.
-
-=head2 client_update($param, $access_token) 
-
-Return OIDC::Lite::Model::ClientInfo object.
-
-=head2 rotate_secret($access_token)
-
-Return OIDC::Lite::Model::ClientInfo object.
 
 =head1 AUTHOR
 
