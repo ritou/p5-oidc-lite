@@ -124,13 +124,26 @@ sub rotate_secret {
 
 OIDC::Lite::Server::DataHandler - Base class that specifies interface for data handler for your service.
 
-=head1 SYNOPSIS
-
 =head1 DESCRIPTION
 
 This specifies interface to handle data stored on your application.
 You have to inherit this, and implements subroutines according to the interface contract.
 This is proxy or adapter that connects OIDC::Lite library to your service.
+
+=head1 SYNOPSIS
+
+    package YourDataHandler;
+    
+    use strict;
+    use warnings;
+
+    use parent 'OIDC::Lite::Server::DataHandler';
+
+    sub validate_scope {
+        my ($self, $client_id, $scope) = @_;
+        # your logic
+        return 1;
+    }
 
 =head1 METHODS
 

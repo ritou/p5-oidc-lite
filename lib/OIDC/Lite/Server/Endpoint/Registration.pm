@@ -182,17 +182,27 @@ This would be included in error responses.
 
 =head2 support_grant_type( $type )
 
+You can set 'client_register', 'rotate_secret', or 'client_update'
+
 =head2 support_grant_types( @types )
 
 You can set 'client_register', 'rotate_secret', or 'client_update'
 
 =head2 data_handler
 
+return data handler
+
 =head2 psgi_app
+
+return compiled psgi application
 
 =head2 compile_psgi_app
 
+compile psgi application
+
 =head2 handle_request( $req )
+
+call handle_request method of Registration Handler
 
 =head1 TEST
 

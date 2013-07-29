@@ -44,19 +44,31 @@ OIDC::Lite::Model::AuthInfo - model class that represents authorization info.
 
 =head2 id
 
-Identifier of this authorization info.
+Identifier of this authorization info
 
 =head2 user_id
 
+User identifier for resource owner
+
 =head2 client_id
+
+CLient identifier for obtain token
 
 =head2 scope
 
+Scope string for authorization info
+
 =head2 refresh_token
+
+Refresh token related with authorization info
 
 =head2 code
 
+Authorization code related with authorization info
+
 =head2 redirect_uri
+
+Redirect URI related with authorization info
 
 =head2 id_token
 

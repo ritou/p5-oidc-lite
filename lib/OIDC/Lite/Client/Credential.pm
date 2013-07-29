@@ -35,11 +35,19 @@ http://openid.net/specs/openid-connect-registration-1_0-14.html#anchor4
 
 =head2 client_id
 
+Client identifier
+
 =head2 client_secret
+
+Client Secret
 
 =head2 registration_access_token
 
+Access Token for client registration
+
 =head2 expires_at
+
+Timestamp that registration access token expires
 
 =head1 AUTHOR
 

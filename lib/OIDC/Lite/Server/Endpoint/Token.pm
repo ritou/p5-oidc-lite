@@ -74,17 +74,11 @@ This would be included in error responses.
 
 =head2 support_grant_type( $type )
 
+You can set 'authorization_code', 'password', 'client_credentials' or 'refresh_token'
+
 =head2 support_grant_types( @types )
 
-You can set 'authorization_code', 'password', or 'refresh_token'
-
-=head2 data_handler
-
-=head2 psgi_app
-
-=head2 compile_psgi_app
-
-=head2 handle_request( $req )
+You can set 'authorization_code', 'password', 'client_credentials' or 'refresh_token'
 
 =head1 TEST
 

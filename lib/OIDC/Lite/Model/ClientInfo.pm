@@ -41,13 +41,23 @@ OIDC::Lite::Model::ClientInfo - model class that represents client info.
 
 =head2 client_id
 
+Client identifier
+
 =head2 client_secret
+
+Client secret
 
 =head2 registration_access_token;
 
+Access token for client registration
+
 =head2 expires_in
 
+Timestamp that a client expires
+
 =head2 metadata
+
+Client metadata
 
 =head1 AUTHOR
 

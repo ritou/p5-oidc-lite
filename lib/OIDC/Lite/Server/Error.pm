@@ -50,6 +50,8 @@ L<http://openid.net/specs/openid-connect-registration-1_0-12.html#anchor7>,
 
 =head1 METHODS
 
+OpenID Connect adds following error to Server
+
 =head1 ERRORS
 
 =over 4

@@ -43,7 +43,11 @@ store of handlers for each registration type.
 
 =head2 add_handler( $grant_type, $handler )
 
+add RegistrationHandler instance
+
 =head2 get_handler( $grant_type )
+
+get RegistrationHandler instance
 
 =head1 SEE ALSO
 

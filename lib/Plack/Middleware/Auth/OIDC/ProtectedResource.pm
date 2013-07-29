@@ -20,11 +20,6 @@ sub call {
     my $error_res = try {
 
         my $req = Plack::Request->new($env);
-
-        # after draft-v6, signature is not required, so always each connection
-        # should be under TLS.
-        # warn "insecure bearere token request" unless $req->secure;
-
         my $parser = OAuth::Lite2::ParamMethods->get_param_parser($req)
             or OAuth::Lite2::Server::Error::InvalidRequest->throw;
 
@@ -141,6 +136,9 @@ middleware for OpenID Connect Protected Resource endpoint
 =head1 METHODS
 
 =head2 call( $env )
+
+This method parses access token.
+If access token is valid, authorization information are set to environment variables.
 
 =head1 ENV VALUES
 
