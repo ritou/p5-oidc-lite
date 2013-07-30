@@ -49,9 +49,11 @@ sub handle_request {
     @response_type_for_sort = sort @response_type_for_sort;
     $response_type = join(' ', @response_type_for_sort);
 
+    my %allowed_response_type_hash;
+    $allowed_response_type_hash{$_}++ foreach @$allowed_response_type;
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
         description => "'response_type' not allowed"
-    ) unless (grep { $_ eq $response_type } @$allowed_response_type);
+    ) unless (exists $allowed_response_type_hash{$response_type});
  
     # client_id
     my $client_id = $req->param("client_id")
@@ -90,18 +92,22 @@ sub handle_request {
 
     # display
     my $display = $req->param("display");
+    my %defined_display_hash;
+    $defined_display_hash{$_}++ foreach @DEFINED_DISPLAY_PARAMS;
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
         description => "'display' is invalid"
     ) unless (  !$display ||
-                (   grep { $_ eq $display } @DEFINED_DISPLAY_PARAMS &&
+                (   exists $defined_display_hash{$display} &&
                     $dh->validate_display($display)));
 
     # prompt
     my $prompt = $req->param("prompt");
+    my %defined_prompt_hash;
+    $defined_prompt_hash{$_}++ foreach @DEFINED_PROMPT_PARAMS;
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
         description => "'prompt' is invalid"
     ) unless (  !$prompt ||
-                (   grep { $_ eq $prompt } @DEFINED_PROMPT_PARAMS &&
+                (   exists $defined_prompt_hash{$prompt} &&
                     $dh->validate_prompt($prompt)));
 
     # max_age
