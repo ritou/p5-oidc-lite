@@ -11,7 +11,6 @@ use OAuth::Lite2::Server::Error;
 use OIDC::Lite::Model::AuthInfo;
 use OAuth::Lite2::Model::AccessToken;
 use OIDC::Lite::Model::IDToken;
-use OIDC::Lite::Model::ClientInfo;
 
 my %ID_POD = (
     auth_info    => 0,

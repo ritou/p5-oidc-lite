@@ -2,12 +2,13 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-use Test::More tests => 88;
+use Test::More;
 
 use Plack::Request;
 use Try::Tiny;
 use TestDataHandler;
 use OIDC::Lite::Server::AuthorizationHandler;
+use OIDC::Lite::Util::JWT;
 use OAuth::Lite2::Util qw(build_content);
 use OAuth::Lite2::Server::Error;
 
@@ -770,7 +771,12 @@ TEST_REQUEST_ALLOW: {
     ok(!$res->{fragment}->{error});
     ok(!$res->{fragment}->{code});
     ok($res->{fragment}->{id_token});
-    is($res->{fragment}->{id_token}, q{eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIifQ.5N_PG_KTTFFYnwJK6Y_ljNMM5_L9ZyiDqDLEqt-nR1M});
+    my $id_token_payload = OIDC::Lite::Util::JWT::payload($res->{fragment}->{id_token});
+    is($id_token_payload->{user_id}, 1, q{ID Token user_id});
+    is($id_token_payload->{aud}, q{audstr}, q{ID Token aud});
+    is($id_token_payload->{iss}, q{issstr}, q{ID Token iss});
+    is($id_token_payload->{exp}, 1349257797, q{ID Token exp});
+    is($id_token_payload->{iat}, 1349257197, q{ID Token iat});
     ok(!$res->{fragment}->{access_token});
     ok(!$res->{fragment}->{token_type});
     ok(!$res->{fragment}->{expires_in});
@@ -798,7 +804,12 @@ TEST_REQUEST_ALLOW: {
     ok(!$res->{fragment}->{error});
     is($res->{fragment}->{code}, q{code_3});
     ok($res->{fragment}->{id_token});
-    is($res->{fragment}->{id_token}, q{eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXVkIjoiYXVkc3RyIiwidXNlcl9pZCI6IjEiLCJpc3MiOiJpc3NzdHIiLCJjX2hhc2giOiJ2NDR2aEJSWUU5Nk16ZkxNek5kcGhnIn0.Q-IkEr82dJik_scGTvY83WRc7aCm_1shVG5Bsv8ST0k});
+    $id_token_payload = OIDC::Lite::Util::JWT::payload($res->{fragment}->{id_token});
+    is($id_token_payload->{user_id}, 1, q{ID Token user_id});
+    is($id_token_payload->{aud}, q{audstr}, q{ID Token aud});
+    is($id_token_payload->{iss}, q{issstr}, q{ID Token iss});
+    is($id_token_payload->{exp}, 1349257797, q{ID Token exp});
+    is($id_token_payload->{iat}, 1349257197, q{ID Token iat});
     ok(!$res->{fragment}->{access_token});
     ok(!$res->{fragment}->{token_type});
     ok(!$res->{fragment}->{expires_in});
@@ -853,7 +864,12 @@ TEST_REQUEST_ALLOW: {
     ok(!$res->{fragment}->{error});
     ok(!$res->{fragment}->{code});
     ok($res->{fragment}->{id_token});
-    is($res->{fragment}->{id_token}, q{eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEzNDkyNTc3OTcsImlhdCI6MTM0OTI1NzE5NywiYXRfaGFzaCI6IlJpalczZHJmd2dBZ0tsYWYxLWwwSmciLCJhdWQiOiJhdWRzdHIiLCJ1c2VyX2lkIjoiMSIsImlzcyI6Imlzc3N0ciJ9.QBG9Ix09JY6jS2UpSM3B5vsYx7sReL5T5n9S4uPiF6o});
+    $id_token_payload = OIDC::Lite::Util::JWT::payload($res->{fragment}->{id_token});
+    is($id_token_payload->{user_id}, 1, q{ID Token user_id});
+    is($id_token_payload->{aud}, q{audstr}, q{ID Token aud});
+    is($id_token_payload->{iss}, q{issstr}, q{ID Token iss});
+    is($id_token_payload->{exp}, 1349257797, q{ID Token exp});
+    is($id_token_payload->{iat}, 1349257197, q{ID Token iat});
     is($res->{fragment}->{access_token}, q{access_token_2});
     is($res->{fragment}->{token_type}, q{Bearer});
     ok($res->{fragment}->{expires_in});
@@ -887,3 +903,5 @@ TEST_REQUEST_ALLOW: {
     ok(!$res->{query});
 
 }
+
+done_testing;

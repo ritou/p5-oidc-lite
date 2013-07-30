@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More;
 use OIDC::Lite::Model::IDToken;
+use OIDC::Lite::Util::JWT;
 
 my $privkeyfile = "t/lib/private_np.pem";
 my $privkey;
@@ -58,7 +59,11 @@ TEST_GET_TOKEN_STRING: {
         payload => \%payload,
     );
     my $id_token_string = $id_token->get_token_string();
-    is( $id_token_string, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJub25lIn0.eyJmb28iOiJiYXIifQ.');
+    my $id_token_header = OIDC::Lite::Util::JWT::header($id_token_string);
+    is( $id_token_header->{alg}, q{none});
+    is( $id_token_header->{typ}, q{JWS});
+    my $id_token_payload = OIDC::Lite::Util::JWT::payload($id_token_string);
+    is( $id_token_payload->{foo}, q{bar});
 
     # alg : HS256
     %header =       (
@@ -75,7 +80,11 @@ TEST_GET_TOKEN_STRING: {
         key     => $key,
     );
     $id_token_string = $id_token->get_token_string();
-    is( $id_token_string, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.Q3cQIgBthdlPPhP5elxuD58iB-Vw2AtxPDPlXng3YaM');
+    $id_token_header = OIDC::Lite::Util::JWT::header($id_token_string);
+    is( $id_token_header->{alg}, q{HS256});
+    is( $id_token_header->{typ}, q{JWS});
+    $id_token_payload = OIDC::Lite::Util::JWT::payload($id_token_string);
+    is( $id_token_payload->{foo}, q{bar});
 
     # alg : RS256
     %header =       (
@@ -91,7 +100,11 @@ TEST_GET_TOKEN_STRING: {
         key     => $privkey,
     );
     $id_token_string = $id_token->get_token_string();
-    is( $id_token_string, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.M3bzN8GKhPxFyENIwcnLb7S_ofOHOjJDh1LXfK5X8No60PGCVa5JIgDeHKLC4_g-mnUqq-JEmxVc8so3FpPWea8c4zHWU1tr1n-GLFO4TSAnsIfuPFcvJB8rNVe4iHA4ePKqUE8Z7jb_d0pcg4NpXr0GYPIg_NQbQIPwjpNz789dpNH3_OClJxeY_ELMkWoZAWHO6uTymPnmlg2KK0PlRp60yWhHi9JlgObYrUEItnjfOyOOqL37oL-S4GyENYFbzcdkCicPIFnnK4oFIY-NmO5Fh6g-NaSPSmgcSiJzbOOdaWNeG6HDQINAEcwT18vUHRVwzGqU1AATztDGpF3mVQ');
+    $id_token_header = OIDC::Lite::Util::JWT::header($id_token_string);
+    is( $id_token_header->{alg}, q{RS256});
+    is( $id_token_header->{typ}, q{JWS});
+    $id_token_payload = OIDC::Lite::Util::JWT::payload($id_token_string);
+    is( $id_token_payload->{foo}, q{bar});
 };
 
 TEST_HASH: {
@@ -113,7 +126,12 @@ TEST_HASH: {
     $id_token->access_token_hash($access_token);
     $id_token->code_hash($authorization_code);
     my $id_token_string = $id_token->get_token_string();
-    is( $id_token_string, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJub25lIn0.eyJmb28iOiJiYXIifQ.');
+    ok( $id_token_string );
+    my $id_token_header = OIDC::Lite::Util::JWT::header($id_token_string);
+    is( $id_token_header->{alg}, q{none});
+    is( $id_token_header->{typ}, q{JWS});
+    my $id_token_payload = OIDC::Lite::Util::JWT::payload($id_token_string);
+    is( $id_token_payload->{foo}, q{bar});
 
     # alg : HS256
     %header =       (
@@ -135,7 +153,12 @@ TEST_HASH: {
     is( $id_token->payload->{at_hash}, 'JnPXVfC--Wj6h3moc1dyiQ');
     is( $id_token->payload->{c_hash}, 'f0zfwRaKGf53ea5EmauamA');
     $id_token_string = $id_token->get_token_string();
-    is( $id_token_string, 'eyJ0eXAiOiJKV1MiLCJhbGciOiJIUzI1NiJ9.eyJhdF9oYXNoIjoiSm5QWFZmQy0tV2o2aDNtb2MxZHlpUSIsImZvbyI6ImJhciIsImNfaGFzaCI6ImYwemZ3UmFLR2Y1M2VhNUVtYXVhbUEifQ.WcsoqJxT-HCpaeEdQ_cNTJ_6nYx_QlAs718_o3cs_R8');
+    ok( $id_token_string );
+    $id_token_header = OIDC::Lite::Util::JWT::header($id_token_string);
+    is( $id_token_header->{alg}, q{HS256});
+    is( $id_token_header->{typ}, q{JWS});
+    $id_token_payload = OIDC::Lite::Util::JWT::payload($id_token_string);
+    is( $id_token_payload->{foo}, q{bar});
 };
 
 TEST_LOAD: {
@@ -200,3 +223,5 @@ TEST_VERIFY: {
     $id_token->key($pubkey);
     ok(!$id_token->verify());
 };
+
+done_testing;
