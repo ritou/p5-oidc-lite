@@ -1,21 +1,13 @@
 package OIDC::Lite::Server::Endpoint::Token;
-
 use strict;
 use warnings;
-
 use parent 'OAuth::Lite2::Server::Endpoint::Token';
 use overload
     q(&{})   => sub { shift->psgi_app },
     fallback => 1;
 
-use Plack::Request;
-use Try::Tiny;
-use Params::Validate;
-
-use OAuth::Lite2::Server::Context;
-use OAuth::Lite2::Formatters;
-use OAuth::Lite2::Server::Error;
 use OIDC::Lite::Server::GrantHandlers;
+use OAuth::Lite2::Server::Error;
 
 sub support_grant_type {
     my ($self, $type) = @_;

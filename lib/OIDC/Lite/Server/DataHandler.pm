@@ -1,82 +1,69 @@
 package OIDC::Lite::Server::DataHandler;
-
 use strict;
 use warnings;
+use parent 'OAuth::Lite2::Server::DataHandler';
 
 use Params::Validate;
 use OAuth::Lite2::Server::Error;
-use parent 'OAuth::Lite2::Server::DataHandler';
 
 sub validate_client_for_authorization {
     my ($self, $client_id, $response_type) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_redirect_uri {
     my ($self, $client_id, $redirect_uri) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_scope {
     my ($self, $client_id, $scope) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_display {
     my ($self, $display) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_prompt {
     my ($self, $prompt) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_max_age {
     my ($self, $param) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_ui_locales {
     my ($self, $ui_locales) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_claims_locales {
     my ($self, $claims_locales) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_id_token_hint {
     my ($self, $param) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_login_hint {
     my ($self, $param) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_request {
     my ($self, $param) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub validate_request_uri {
     my ($self, $param) = @_;
     die "abstract method";
-    return 1;
 }
 
 sub get_user_id_for_authorization {

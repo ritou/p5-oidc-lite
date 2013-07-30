@@ -1,23 +1,20 @@
 package OIDC::Lite::Client::WebServer;
-
 use strict;
 use warnings;
-
 use base 'Class::ErrorHandler';
-
-use Params::Validate qw(HASHREF);
-use Carp ();
 use bytes ();
+
 use URI;
+use Carp ();
+use Try::Tiny qw(try catch);
 use LWP::UserAgent;
 use HTTP::Request;
 use HTTP::Headers;
-use Try::Tiny;
-
+use Params::Validate qw(HASHREF);
 use OAuth::Lite2;
 use OAuth::Lite2::Util qw(build_content);
-use OAuth::Lite2::Formatters;
 use OIDC::Lite::Client::TokenResponseParser;
+
 
 =head1 NAME
 

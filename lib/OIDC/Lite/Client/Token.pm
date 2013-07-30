@@ -1,8 +1,6 @@
 package OIDC::Lite::Client::Token;
-
 use strict;
 use warnings;
-
 use base 'Class::Accessor::Fast';
 
 __PACKAGE__->mk_accessors(qw(

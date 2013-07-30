@@ -1,5 +1,4 @@
 package OIDC::Lite::Server::GrantHandlers;
-
 use strict;
 use warnings;
 

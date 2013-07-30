@@ -1,12 +1,11 @@
 package OIDC::Lite::Client::TokenResponseParser;
-
 use strict;
 use warnings;
 
-use Try::Tiny;
+use Try::Tiny qw/try catch/;
+use OIDC::Lite::Client::Token;
 use OAuth::Lite2::Formatters;
 use OAuth::Lite2::Client::Error;
-use OIDC::Lite::Client::Token;
 
 sub new {
     bless {}, $_[0];

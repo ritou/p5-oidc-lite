@@ -1,17 +1,14 @@
 package Plack::Middleware::Auth::OIDC::ProtectedResource;
-
 use strict;
 use warnings;
-
 use parent 'Plack::Middleware';
 
+use Carp ();
+use Try::Tiny qw(try catch);
 use Plack::Request;
 use Plack::Util::Accessor qw(realm data_handler error_uri);
-use Try::Tiny;
-use Carp ();
-
-use OAuth::Lite2::Server::Error;
 use OAuth::Lite2::ParamMethods;
+use OAuth::Lite2::Server::Error;
 
 sub call {
     my ($self, $env) = @_;

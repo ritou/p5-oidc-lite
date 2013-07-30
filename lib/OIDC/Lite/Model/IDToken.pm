@@ -1,17 +1,18 @@
 package OIDC::Lite::Model::IDToken;
-
 use strict;
 use warnings;
-
 use base 'Class::Accessor::Fast';
-use Params::Validate;
-use OIDC::Lite::Util::JWT;
-use JSON::WebToken qw/encode_jwt decode_jwt/;
+
 use MIME::Base64 qw/encode_base64url decode_base64url/;
+use JSON::WebToken qw/encode_jwt decode_jwt/;
+use Params::Validate;
 use Digest::SHA qw/sha256 sha384 sha512/;
+use OIDC::Lite::Util::JWT;
+
 use constant HALF_BITS_DENOMINATOR => 2 * 8;
 use constant ALG_LEN => 2;
 use constant BITS_LEN => 3;
+
 
 =head1 NAME
 
@@ -161,7 +162,7 @@ sub load {
 
     my $header  = OIDC::Lite::Util::JWT::header($token_string);
     my $payload = OIDC::Lite::Util::JWT::payload($token_string);
-    return if(!$header or !$payload);
+    return unless ( $header and $payload );
 
     my $id_token =  OIDC::Lite::Model::IDToken->new(
                        header   => $header, 

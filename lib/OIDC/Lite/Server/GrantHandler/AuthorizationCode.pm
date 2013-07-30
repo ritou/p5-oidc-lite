@@ -1,13 +1,11 @@
 package OIDC::Lite::Server::GrantHandler::AuthorizationCode;
-
 use strict;
 use warnings;
-
 use parent 'OAuth::Lite2::Server::GrantHandler';
+
+use Carp ();
 use OAuth::Lite2::Server::Error;
 use OAuth::Lite2::ParamMethod::AuthHeader;
-use OIDC::Lite::Model::AuthInfo;
-use Carp ();
 
 sub handle_request {
     my ($self, $dh) = @_;

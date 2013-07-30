@@ -1,5 +1,4 @@
 package OIDC::Lite::Server::Scope;
-
 use strict;
 use warnings;
 

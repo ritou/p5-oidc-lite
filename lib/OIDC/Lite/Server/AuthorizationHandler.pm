@@ -1,10 +1,9 @@
 package OIDC::Lite::Server::AuthorizationHandler;
-
 use strict;
 use warnings;
 
+use Params::Validate;
 use OAuth::Lite2::Server::Error;
-use Carp ();
 
 my @DEFINED_DISPLAY_PARAMS = qw(
     page
