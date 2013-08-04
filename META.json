@@ -30,6 +30,7 @@
             "Crypt::OpenSSL::RSA" : "0",
             "ExtUtils::MakeMaker" : "6.62",
             "Test::Mock::LWP::Conditional" : "0",
+            "Test::MockObject" : "0",
             "Test::More" : "0"
          }
       },

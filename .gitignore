@@ -3,10 +3,13 @@ META.yml
 Makefile
 Makefile.old
 inc/
+blib/
+cover_db/
 pm_to_blib
 *~
 /oidc-lite-*
 /.build
+/_build
 /_build_params
 /Build
 !Build/

@@ -3,9 +3,6 @@ use strict;
 use warnings;
 use parent 'OAuth::Lite2::Server::DataHandler';
 
-use Params::Validate;
-use OAuth::Lite2::Server::Error;
-
 sub validate_client_for_authorization {
     my ($self, $client_id, $response_type) = @_;
     die "abstract method";
@@ -79,12 +76,6 @@ sub create_id_token {
 
 sub create_or_update_auth_info {
     my ($self, %args) = @_;
-    Params::Validate::validate(@_, {
-        client_id   => 1,
-        user_id     => 1,
-        scope       => { optional => 1 },
-        id_token    => { optional => 1 },
-    });
     die "abstract method";
 }
 

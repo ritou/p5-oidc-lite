@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 30;
+use Test::More;
 use OIDC::Lite::Server::Scope;
 
 TEST_VALIDATE_SCOPES: {
@@ -46,6 +46,8 @@ TEST_VALIDATE_SCOPES: {
 };
 
 TEST_IS_OPENID_REQUEST: {
+    ok(!OIDC::Lite::Server::Scope->is_openid_request(q{scope}));
+
     my @scopes = qw{scope1};
     ok(!OIDC::Lite::Server::Scope->is_openid_request(\@scopes));
 
@@ -60,6 +62,8 @@ TEST_IS_OPENID_REQUEST: {
 };
 
 TEST_IS_RQUIRED_OFFLINE_ACCESS: {
+    ok(!OIDC::Lite::Server::Scope->is_required_offline_access(q{scope}));
+
     my @scopes = qw{online_access};
     ok(!OIDC::Lite::Server::Scope->is_required_offline_access(\@scopes));
 
@@ -99,9 +103,17 @@ TEST_TO_NORMAL_CLAIMS: {
     ok(@$claims);
     is(@$claims, @expected_claims);
 
+    @scopes = qw{openid address};
+    $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
+    @expected_claims = qw{sub address};
+    ok(@$claims);
+    is(@$claims, @expected_claims);
+
     @scopes = qw{openid phone};
     $claims = OIDC::Lite::Server::Scope->to_normal_claims(\@scopes);
     @expected_claims = qw{sub phone_number phone_number_verified};
     ok(@$claims);
     is(@$claims, @expected_claims);
 };
+
+done_testing;

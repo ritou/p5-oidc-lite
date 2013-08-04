@@ -25,6 +25,18 @@ TestDataHandler->add_client(    id => q{client_id_2},
                                 scope => q{openid}, 
 );
 
+TestDataHandler->add_client(    id => q{client_id_3}, 
+                                response_type => q{token}, 
+                                redirect_uri => q{http://rp.example.org/redirect}, 
+                                scope => q{openid}, 
+);
+
+TestDataHandler->add_client(    id => q{client_id_4}, 
+                                response_type => q{code token}, 
+                                redirect_uri => q{http://rp.example.org/redirect}, 
+                                scope => q{openid}, 
+);
+
 TEST_RESPONSE_TYPE: {
     # not found
     my $params = {
@@ -240,22 +252,19 @@ TEST_SCOPE: {
 };
 
 TEST_NONCE: {
-    # required
     my $params = {
-                response_type => q{token id_token},
+                response_type => q{id_token token},
                 client_id     => q{client_id_2},
                 redirect_uri  => q{http://rp.example.org/redirect},
                 scope         => q{openid},
     };
-
     my $request = Plack::Request->new({
                 REQUEST_URI    => q{http://example.org/authorize},
                 REQUEST_METHOD => q{GET},
                 QUERY_STRING   => build_content($params),
     });
-
     my $dh = TestDataHandler->new(request => $request);
-    my @allowed_response_type = ("code", "token", "id_token token");
+    my @allowed_response_type = ("code", "token", "code token", "id_token token");
     my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
     my $error_message;
     try {
@@ -265,11 +274,76 @@ TEST_NONCE: {
             ? $_->type : $_;
     };
     is($error_message, q{invalid_request: nonce_required});
+
+    $params = {
+                response_type => q{id_token token},
+                client_id     => q{client_id_2},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+                nonce         => q{nonce},
+    };
+    $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+    $dh = TestDataHandler->new(request => $request);
+    $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    $error_message = undef;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    ok(!$error_message);
+
+    $params = {
+                response_type => q{token},
+                client_id     => q{client_id_3},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+    };
+    $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+    $dh = TestDataHandler->new(request => $request);
+    $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    $error_message = undef;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    ok(!$error_message);
+
+    $params = {
+                response_type => q{code token},
+                client_id     => q{client_id_4},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+    };
+    $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+    $dh = TestDataHandler->new(request => $request);
+    $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    $error_message = undef;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    ok(!$error_message);
 };
 
 TEST_DISPLAY: {
-
-    # invalid
     my $params = {
                 response_type => q{code},
                 client_id     => q{client_id_1},
@@ -277,13 +351,11 @@ TEST_DISPLAY: {
                 scope         => q{openid},
                 display       => q{invalid},
     };
-
     my $request = Plack::Request->new({
                 REQUEST_URI    => q{http://example.org/authorize},
                 REQUEST_METHOD => q{GET},
                 QUERY_STRING   => build_content($params),
     });
-
     my $dh = TestDataHandler->new(request => $request);
     my @allowed_response_type = ("code", "token", "id_token token");
     my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
@@ -296,11 +368,30 @@ TEST_DISPLAY: {
     };
     is($error_message, q{invalid_request: 'display' is invalid});
 
+    $params = {
+                response_type => q{code},
+                client_id     => q{client_id_1},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+                display       => q{wap},
+    };
+    $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+    $dh = TestDataHandler->new(request => $request);
+    $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_request: 'display' is invalid});
 };
 
 TEST_PROMPT: {
-
-    # invalid
     my $params = {
                 response_type => q{code},
                 client_id     => q{client_id_1},
@@ -308,13 +399,11 @@ TEST_PROMPT: {
                 scope         => q{openid},
                 prompt        => q{invalid},
     };
-
     my $request = Plack::Request->new({
                 REQUEST_URI    => q{http://example.org/authorize},
                 REQUEST_METHOD => q{GET},
                 QUERY_STRING   => build_content($params),
     });
-
     my $dh = TestDataHandler->new(request => $request);
     my @allowed_response_type = ("code", "token", "id_token token");
     my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
@@ -327,6 +416,27 @@ TEST_PROMPT: {
     };
     is($error_message, q{invalid_request: 'prompt' is invalid});
 
+    $params = {
+                response_type => q{code},
+                client_id     => q{client_id_1},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+                prompt        => q{none},
+    };
+    $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+    $dh = TestDataHandler->new(request => $request);
+    $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_request: 'prompt' is invalid});
 };
 
 TEST_MAX_AGE: {
@@ -584,6 +694,8 @@ TEST_REQUEST_SUCCESS: {
                 client_id     => q{client_id_1},
                 redirect_uri  => q{http://rp.example.org/redirect},
                 scope         => q{openid},
+                display       => q{page},
+                prompt        => q{login},
     };
 
     my $request = Plack::Request->new({
@@ -722,6 +834,30 @@ TEST_REQUEST_ALLOW: {
     is($res->{query}->{code}, q{code_0});
     ok(!$res->{fragment});
 
+    # code with state
+    $params = {
+                response_type => q{code},
+                client_id     => q{client_id_1},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{openid},
+                state         => q{state},
+    };
+    $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    $dh = TestDataHandler->new(request => $request);
+    @allowed_response_type = ("code");
+    $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    $res = $authz_handler->allow();
+    is($res->{redirect_uri}, $params->{redirect_uri});
+    ok(!$res->{query}->{error});
+    is($res->{query}->{code}, q{code_1});
+    is($res->{query}->{state}, q{state});
+    ok(!$res->{fragment});
+
     # token
     $params = {
                 response_type => q{token},
@@ -747,6 +883,33 @@ TEST_REQUEST_ALLOW: {
     is($res->{fragment}->{access_token}, q{access_token_0});
     is($res->{fragment}->{token_type}, q{Bearer});
     ok($res->{fragment}->{expires_in});
+    ok(!$res->{query});
+
+    # token without expires_in
+    $params = {
+                response_type => q{token},
+                client_id     => q{client_id_1},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{no_exp openid},
+    };
+
+    $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    $dh = TestDataHandler->new(request => $request);
+    @allowed_response_type = ("token");
+    $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    $res = $authz_handler->allow();
+    is($res->{redirect_uri}, $params->{redirect_uri});
+    ok(!$res->{fragment}->{error});
+    ok(!$res->{fragment}->{code});
+    ok(!$res->{fragment}->{id_token});
+    is($res->{fragment}->{access_token}, q{access_token_1});
+    is($res->{fragment}->{token_type}, q{Bearer});
+    ok(!$res->{fragment}->{expires_in});
     ok(!$res->{query});
 
     # id_token
@@ -802,7 +965,7 @@ TEST_REQUEST_ALLOW: {
     $res = $authz_handler->allow();
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
-    is($res->{fragment}->{code}, q{code_3});
+    is($res->{fragment}->{code}, q{code_5});
     ok($res->{fragment}->{id_token});
     $id_token_payload = OIDC::Lite::Util::JWT::payload($res->{fragment}->{id_token});
     is($id_token_payload->{user_id}, 1, q{ID Token user_id});
@@ -835,9 +998,9 @@ TEST_REQUEST_ALLOW: {
     $res = $authz_handler->allow();
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
-    is($res->{fragment}->{code}, q{code_4});
+    is($res->{fragment}->{code}, q{code_6});
     ok(!$res->{fragment}->{id_token});
-    is($res->{fragment}->{access_token}, q{access_token_1});
+    is($res->{fragment}->{access_token}, q{access_token_2});
     is($res->{fragment}->{token_type}, q{Bearer});
     ok($res->{fragment}->{expires_in});
     ok(!$res->{query});
@@ -870,7 +1033,7 @@ TEST_REQUEST_ALLOW: {
     is($id_token_payload->{iss}, q{issstr}, q{ID Token iss});
     is($id_token_payload->{exp}, 1349257797, q{ID Token exp});
     is($id_token_payload->{iat}, 1349257197, q{ID Token iat});
-    is($res->{fragment}->{access_token}, q{access_token_2});
+    is($res->{fragment}->{access_token}, q{access_token_3});
     is($res->{fragment}->{token_type}, q{Bearer});
     ok($res->{fragment}->{expires_in});
     ok(!$res->{query});
@@ -895,13 +1058,12 @@ TEST_REQUEST_ALLOW: {
     $res = $authz_handler->allow();
     is($res->{redirect_uri}, $params->{redirect_uri});
     ok(!$res->{fragment}->{error});
-    is($res->{fragment}->{code}, q{code_6});
+    is($res->{fragment}->{code}, q{code_8});
     ok($res->{fragment}->{id_token});
-    is($res->{fragment}->{access_token}, q{access_token_3});
+    is($res->{fragment}->{access_token}, q{access_token_4});
     is($res->{fragment}->{token_type}, q{Bearer});
     ok($res->{fragment}->{expires_in});
     ok(!$res->{query});
-
 }
 
 done_testing;

@@ -46,12 +46,16 @@ sub compile_psgi_app {
 
 sub handle_request {
     my ($self, $request) = @_;
+
+    my $scope = ($request->env->{X_OAUTH_SCOPE}) ? $request->env->{X_OAUTH_SCOPE} : q{};
+    my $claims = ($request->env->{X_OIDC_USERINFO_CLAIMS}) ? encode_json($request->env->{X_OIDC_USERINFO_CLAIMS}) : "[]";
+
     return $request->new_response(200,
         ["Content-Type" => "application/json"],
         [ sprintf("{user: '%s', scope: '%s', claims: %s, is_legacy: '%d'}",
             $request->env->{REMOTE_USER},
-            $request->env->{X_OAUTH_SCOPE},
-            encode_json($request->env->{X_OIDC_USERINFO_CLAIMS}),
+            $scope,
+            $claims,
             $request->env->{X_OAUTH_IS_LEGACY})]
     );
 }

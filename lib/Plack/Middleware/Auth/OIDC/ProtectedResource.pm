@@ -22,7 +22,7 @@ sub call {
 
         $is_legacy = $parser->is_legacy($req);
 
-        # after draft-v6, $params aren't required.
+        # At Bearer Token, $params aren't required.
         my ($token, $params) = $parser->parse($req);
         OAuth::Lite2::Server::Error::InvalidRequest->throw unless $token;
 
@@ -46,10 +46,7 @@ sub call {
         }
 
         my $auth_info = $dh->get_auth_info_by_id($access_token->auth_id);
-
-        OAuth::Lite2::Server::Error::InvalidToken->throw
-            unless $auth_info;
-
+        OAuth::Lite2::Server::Error::InvalidToken->throw unless $auth_info;
         Carp::croak "OIDC::Lite::Server::DataHandler::get_auth_info_by_id doesn't return OIDC::Lite::Model::AuthInfo"
             unless $auth_info->isa("OIDC::Lite::Model::AuthInfo");
 
@@ -62,16 +59,12 @@ sub call {
         $env->{REMOTE_USER}    = $auth_info->user_id;
         $env->{X_OAUTH_CLIENT} = $auth_info->client_id;
         $env->{X_OAUTH_SCOPE}  = $auth_info->scope if $auth_info->scope;
-        $env->{X_OIDC_USERINFO_CLAIMS}  = $auth_info->userinfo_claims if $auth_info->userinfo_claims;
+        $env->{X_OIDC_USERINFO_CLAIMS}  = $auth_info->userinfo_claims if exists $auth_info->userinfo_claims->[0];
         # pass legacy flag
         $env->{X_OAUTH_IS_LEGACY}   = ($is_legacy);
-
         return;
-
     } catch {
-
         if ($_->isa("OAuth::Lite2::Server::Error")) {
-
             my @params;
             push(@params, sprintf(q{realm="%s"}, $self->{realm}))
                 if $self->{realm};
@@ -80,8 +73,6 @@ sub call {
                 if $_->description;
             push(@params, sprintf(q{error_uri="%s"}, $self->{error_uri}))
                 if $self->{error_uri};
-            # push(@params, sprintf(q{scope='%s'}, $_->scope))
-            #     if $_->scope;
 
             if($is_legacy){
                 return [ $_->code, [ "WWW-Authenticate" =>
@@ -90,17 +81,14 @@ sub call {
                 return [ $_->code, [ "WWW-Authenticate" =>
                     "Bearer " . join(', ', @params) ], [  ] ];
             }
-
         } else {
-
             # rethrow
             die $_;
-
         }
-
     };
 
-    return $error_res || $self->app->($env);
+    $error_res = $self->app->($env) unless $error_res;
+    return $error_res;
 }
 
 =head1 NAME

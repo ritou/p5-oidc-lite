@@ -49,7 +49,9 @@ sub parse {
                 my $result = $formatter->parse($http_res->content);
                 $errmsg = $result->{error}
                     if exists $result->{error};
-            } catch { return };
+            } catch {
+        	return OAuth::Lite2::Client::Error::InvalidResponse->throw;
+            };
         }
         OAuth::Lite2::Client::Error::InvalidResponse->throw( message => $errmsg );
     }

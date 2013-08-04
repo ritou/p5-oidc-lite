@@ -11,4 +11,5 @@ on build => sub {
     requires 'ExtUtils::MakeMaker', '6.62';
     requires 'Test::Mock::LWP::Conditional';
     requires 'Test::More';
+    requires 'Test::MockObject';
 };

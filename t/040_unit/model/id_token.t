@@ -42,15 +42,19 @@ TEST_NEW: {
     is($id_token->payload,  \%payload);
     is($id_token->key,      $key);
 
+    $id_token = OIDC::Lite::Model::IDToken->new({
+        header  => \%header,
+        payload => \%payload,
+        key     => $key,
+    });
+    is($id_token->header,   \%header);
+    is($id_token->payload,  \%payload);
+    is($id_token->key,      $key);
 };
 
 TEST_GET_TOKEN_STRING: {
-
-    # alg : none
-    my %header =    (
-                        alg => 'none',
-                        typ => 'JWS',
-                    );
+    # default
+    my %header =    ();
     my %payload =   (
                         foo => 'bar'
                     );
@@ -61,8 +65,27 @@ TEST_GET_TOKEN_STRING: {
     my $id_token_string = $id_token->get_token_string();
     my $id_token_header = OIDC::Lite::Util::JWT::header($id_token_string);
     is( $id_token_header->{alg}, q{none});
-    is( $id_token_header->{typ}, q{JWS});
+    is( $id_token_header->{typ}, q{JWT});
     my $id_token_payload = OIDC::Lite::Util::JWT::payload($id_token_string);
+    is( $id_token_payload->{foo}, q{bar});
+
+    # alg : none
+    %header =    (
+                        alg => 'none',
+                        typ => 'JWS',
+                    );
+    %payload =   (
+                        foo => 'bar'
+                    );
+    $id_token = OIDC::Lite::Model::IDToken->new(
+        header  => \%header,
+        payload => \%payload,
+    );
+    $id_token_string = $id_token->get_token_string();
+    $id_token_header = OIDC::Lite::Util::JWT::header($id_token_string);
+    is( $id_token_header->{alg}, q{none});
+    is( $id_token_header->{typ}, q{JWS});
+    $id_token_payload = OIDC::Lite::Util::JWT::payload($id_token_string);
     is( $id_token_payload->{foo}, q{bar});
 
     # alg : HS256
@@ -108,7 +131,6 @@ TEST_GET_TOKEN_STRING: {
 };
 
 TEST_HASH: {
-
     # alg : none
     my %header =    (
                         alg => 'none',
@@ -125,6 +147,8 @@ TEST_HASH: {
     my $authorization_code = 'authorization_code_string';
     $id_token->access_token_hash($access_token);
     $id_token->code_hash($authorization_code);
+    ok( !$id_token->payload->{at_hash} );
+    ok( !$id_token->payload->{c_hash} );
     my $id_token_string = $id_token->get_token_string();
     ok( $id_token_string );
     my $id_token_header = OIDC::Lite::Util::JWT::header($id_token_string);
@@ -132,6 +156,16 @@ TEST_HASH: {
     is( $id_token_header->{typ}, q{JWS});
     my $id_token_payload = OIDC::Lite::Util::JWT::payload($id_token_string);
     is( $id_token_payload->{foo}, q{bar});
+
+    $id_token = OIDC::Lite::Model::IDToken->new(
+        header  => \%header,
+        payload => \%payload,
+    );
+    $id_token->header->{alg} = undef;
+    $id_token->access_token_hash($access_token);
+    $id_token->code_hash($authorization_code);
+    ok( !$id_token->payload->{at_hash} );
+    ok( !$id_token->payload->{c_hash} );
 
     # alg : HS256
     %header =       (
@@ -162,9 +196,23 @@ TEST_HASH: {
 };
 
 TEST_LOAD: {
-    # alg : none
     my $token_string = '';
     my $id_token = OIDC::Lite::Model::IDToken->load($token_string);
+    is( $id_token, undef);
+
+    # no header and no payload
+    $token_string = 'a.b.';
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string);
+    is( $id_token, undef);
+
+    # no header
+    $token_string = 'a.eyJmb28iOiJiYXIifQ.';
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string);
+    is( $id_token, undef);
+
+    # no payload
+    $token_string = 'eyJhbGciOiJub25lIiwidHlwIjoiSldTIn0.b.';
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string);
     is( $id_token, undef);
 
     $token_string = 'eyJhbGciOiJub25lIiwidHlwIjoiSldTIn0.eyJmb28iOiJiYXIifQ.';
@@ -183,10 +231,12 @@ TEST_LOAD: {
 };
 
 TEST_VERIFY: {
+    my $id_token = OIDC::Lite::Model::IDToken->new;
+    ok(!$id_token->verify());
 
     # alg : none
     my $token_string = 'eyJhbGciOiJub25lIiwidHlwIjoiSldTIn0.eyJmb28iOiJiYXIifQ.';
-    my $id_token = OIDC::Lite::Model::IDToken->load($token_string);
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string);
     ok($id_token->verify());
 
     $token_string = 'eyJhbGciOiJub25lIiwidHlwIjoiSldTIn0.eyJmb28iOiJiYXIifQ.INVALID';

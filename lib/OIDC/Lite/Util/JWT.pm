@@ -40,15 +40,14 @@ Returns hash reference of JWT Header.
 sub header {
     my ($jwt) = @_;
     my $segments = [split(/\./, $jwt)];
-    return {}
-        unless (@$segments == 2 or @$segments == 3);
+    return unless (@$segments == 2 or @$segments == 3);
 
     my ($header_segment, $payload_segment, $crypt_segment) = @$segments;
     my $header;
     eval {
         $header = decode_json(decode_base64url($header_segment));
     };
-    return {} if $@;
+    return if $@;
     return $header;
 }
 
@@ -64,15 +63,14 @@ Returns hash reference of JWT Payload.
 sub payload {
     my ($jwt) = @_;
     my $segments = [split(/\./, $jwt)];
-    return {}
-        unless (@$segments == 2 or @$segments == 3);
+    return unless (@$segments == 2 or @$segments == 3);
 
     my ($header_segment, $payload_segment, $crypt_segment) = @$segments;
     my $payload;
     eval {
         $payload = decode_json(decode_base64url($payload_segment));
     };
-    return {} if $@;
+    return if $@;
     return $payload;
 }
 

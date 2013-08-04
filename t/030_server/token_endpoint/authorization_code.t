@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-use Test::More tests => 13;
+use Test::More;
 
 use Plack::Request;
 use Try::Tiny;
@@ -21,7 +21,6 @@ my $auth_info = $dh->create_or_update_auth_info(
     code         => q{code_bar},
     redirect_uri => q{http://example.org/callback},
 );
-
 is($auth_info->refresh_token, "refresh_token_0");
 is($auth_info->id_token, "id_token_0");
 
@@ -124,6 +123,14 @@ sub test_error {
     redirect_uri  => q{http://example.org/callback},
 }, q{invalid_grant});
 
+# DataHandler doesn't return AuthInfo
+&test_error({
+    client_id     => q{foo},
+    code          => q{code_invalid_croak},
+    client_secret => q{secret_value},
+    redirect_uri  => q{http://example.org/callback},
+}, q{OAuth::Lite2::Server::DataHandler::get_auth_info_by_code doesn't return OAuth::Lite2::Model::AuthInfo});
+
 # url mismatch
 &test_error({
     client_id     => q{foo},
@@ -146,3 +153,52 @@ sub test_error {
     id_token      => q{id_token_0},
 });
 
+$auth_info = $dh->create_or_update_auth_info(
+    client_id    => q{foo},
+    user_id      => q{1},
+    code         => q{code_without_optional_attr},
+    redirect_uri => q{http://example.org/callback},
+);
+&test_success({
+    client_id     => q{foo},
+    code          => q{code_without_optional_attr},
+    client_secret => q{secret_value},
+    redirect_uri  => q{http://example.org/callback},
+}, {
+    token_type    => q{Bearer},
+    token         => q{access_token_1},
+    expires_in    => undef,
+    refresh_token => undef,
+    id_token      => undef,
+});
+
+# authinfo doesn't have ridirect_uri
+$auth_info = $dh->create_or_update_auth_info(
+    client_id    => q{foo},
+    user_id      => q{1},
+    scope        => q{email},
+    code         => q{code_bar2},
+);
+&test_error({
+    client_id     => q{foo},
+    code          => q{code_bar2},
+    client_secret => q{secret_value},
+    redirect_uri  => q{http://example.org/callback},
+}, q{redirect_uri_mismatch});
+
+# DataHandler doesn't return AccessToken
+$auth_info = $dh->create_or_update_auth_info(
+    client_id    => q{foo},
+    user_id      => q{1},
+    scope        => q{email},
+    code         => q{code_for_croak_at},
+    redirect_uri => q{http://example.org/callback},
+);
+&test_error({
+    client_id     => q{foo},
+    code          => q{code_for_croak_at},
+    client_secret => q{secret_value},
+    redirect_uri  => q{http://example.org/callback},
+}, q{OAuth::Lite2::Server::DataHandler::create_or_update_access_token doesn't return OAuth::Lite2::Model::AccessToken});
+
+done_testing;

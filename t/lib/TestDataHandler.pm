@@ -7,7 +7,6 @@ use parent 'OIDC::Lite::Server::DataHandler';
 
 use String::Random;
 
-use OAuth::Lite2::Server::Error;
 use OIDC::Lite::Model::AuthInfo;
 use OAuth::Lite2::Model::AccessToken;
 use OIDC::Lite::Model::IDToken;
@@ -104,6 +103,12 @@ sub get_auth_info_by_refresh_token {
 
 sub get_auth_info_by_id {
     my ($self, $auth_id) = @_;
+
+    # for croak test
+    if ( $auth_id == 99 ) {
+        return q{invalid object};
+    }
+
     return $AUTH_INFO{$auth_id};
 }
 
@@ -111,6 +116,12 @@ sub get_auth_info_by_id {
 #   - device_token
 sub get_auth_info_by_code {
     my ($self, $device_code) = @_;
+
+    # for croak test
+    if ( $device_code eq q{code_invalid_croak} ) {
+        return q{invalid object};
+    }
+
     for my $id (keys %AUTH_INFO) {
         my $auth_info = $AUTH_INFO{$id};
         return $auth_info if ($auth_info->code && $auth_info->code eq $device_code);
@@ -134,9 +145,10 @@ sub create_or_update_auth_info {
                     unless($id_token);
     $code = sprintf q{code_%d}, $id
                     unless($code);
-    my @claims = (q{user_id}, q{email});
+    my @claims;
+    @claims = (q{user_id}, q{email}) if $scope;
 
-    my $auth_info = OIDC::Lite::Model::AuthInfo->new({
+    my %attrs = (
         id              => $id,
         client_id       => $client_id,
         user_id         => $user_id,
@@ -144,7 +156,15 @@ sub create_or_update_auth_info {
         refresh_token   => $refresh_token,
         id_token        => $id_token,
         userinfo_claims => \@claims,
-    });
+    );
+    # for attribute lacked case
+    if ( $code eq q{code_without_optional_attr} ) {
+        delete $attrs{scope};
+        delete $attrs{refresh_token};
+        delete $attrs{id_token};
+    }
+
+    my $auth_info = OIDC::Lite::Model::AuthInfo->new(\%attrs);
     $auth_info->code($code) if $code;
     $auth_info->redirect_uri($redirect_uri) if $redirect_uri;
 
@@ -161,6 +181,11 @@ sub create_or_update_access_token {
     my $auth_info = $params{auth_info};
     my $auth_id = $auth_info->id;
 
+    # for croak test
+    if ( $auth_info->code eq q{code_for_croak_at} ) {
+        return q{invalid object};
+    }
+
     my $id = ref($self)->gen_next_access_token_id();
     my $token = sprintf q{access_token_%d}, $id;
 
@@ -171,6 +196,12 @@ sub create_or_update_access_token {
         created_on => time(),
     );
 
+    # for attribute lacked case
+    if ( $auth_info->code eq q{code_without_optional_attr} or 
+         ($auth_info->scope && $auth_info->scope eq q{no_exp openid})) {
+        delete $attrs{expires_in};
+    }
+
     my $access_token = OAuth::Lite2::Model::AccessToken->new(\%attrs);
     $ACCESS_TOKEN{$auth_id} = $access_token;
     return $access_token;
@@ -178,6 +209,12 @@ sub create_or_update_access_token {
 
 sub get_access_token {
     my ($self, $token) = @_;
+
+    # for croak test
+    if ( $token eq q{token_for_croak} ) {
+        return q{invalid object};
+    }
+
     for my $auth_id ( keys %ACCESS_TOKEN ) {
         my $t = $ACCESS_TOKEN{ $auth_id };
         if ($t->token eq $token) {
@@ -246,12 +283,12 @@ sub validate_scope{
 
 sub validate_display{
     my ($self, $display) = @_;
-    return (!$display || $display ne "invalid");
+    return (!$display || $display ne "wap");
 }
 
 sub validate_prompt{
     my ($self, $prompt) = @_;
-    return (!$prompt || $prompt ne "invalid");
+    return (!$prompt || $prompt ne "none");
 }
 
 sub validate_max_age{
@@ -319,5 +356,7 @@ sub create_id_token {
         key     => $key,
     );
 }
+
+# for test
 
 1;

@@ -86,29 +86,31 @@ sub handle_request {
     ## optional parameters
     # nonce
     my $nonce = $req->param("nonce");
-    OAuth::Lite2::Server::Error::InvalidRequest->throw(
-        description => "nonce_required"
-    ) if (!$nonce && $response_type ne "token" && $response_type ne "code" && $response_type ne "code token");
+    if ( $response_type ne "token" && $response_type ne "code" && $response_type ne "code token") {
+        OAuth::Lite2::Server::Error::InvalidRequest->throw(
+            description => "nonce_required"
+        ) unless $nonce;
+    }
 
     # display
     my $display = $req->param("display");
-    my %defined_display_hash;
-    $defined_display_hash{$_}++ foreach @DEFINED_DISPLAY_PARAMS;
-    OAuth::Lite2::Server::Error::InvalidRequest->throw(
-        description => "'display' is invalid"
-    ) unless (  !$display ||
-                (   exists $defined_display_hash{$display} &&
-                    $dh->validate_display($display)));
+    if ( $display ) {
+        my %defined_display_hash;
+        $defined_display_hash{$_}++ foreach @DEFINED_DISPLAY_PARAMS;
+        OAuth::Lite2::Server::Error::InvalidRequest->throw(
+            description => "'display' is invalid"
+        ) unless ( exists $defined_display_hash{$display} && $dh->validate_display($display));
+    }
 
     # prompt
     my $prompt = $req->param("prompt");
-    my %defined_prompt_hash;
-    $defined_prompt_hash{$_}++ foreach @DEFINED_PROMPT_PARAMS;
-    OAuth::Lite2::Server::Error::InvalidRequest->throw(
-        description => "'prompt' is invalid"
-    ) unless (  !$prompt ||
-                (   exists $defined_prompt_hash{$prompt} &&
-                    $dh->validate_prompt($prompt)));
+    if ( $prompt ) {
+        my %defined_prompt_hash;
+        $defined_prompt_hash{$_}++ foreach @DEFINED_PROMPT_PARAMS;
+        OAuth::Lite2::Server::Error::InvalidRequest->throw(
+            description => "'prompt' is invalid"
+        ) unless ( exists $defined_prompt_hash{$prompt} && $dh->validate_prompt($prompt));
+    }
 
     # max_age
     OAuth::Lite2::Server::Error::InvalidRequest->throw(
