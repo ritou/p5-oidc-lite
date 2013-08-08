@@ -4,7 +4,7 @@ OIDC::Lite - OpenID Connect Library
 
 # DESCRIPTION
 
-OpenID Connect Library
+OpenID Connect Server/Client Library
 
 # AUTHOR
 
