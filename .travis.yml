@@ -1,0 +1,6 @@
+language: perl
+perl:
+  - "5.18"
+install:
+    - cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org .
+script: "perl Build.PL && ./Build test"
