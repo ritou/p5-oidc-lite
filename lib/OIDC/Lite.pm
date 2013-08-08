@@ -15,7 +15,7 @@ OIDC::Lite - OpenID Connect Library
 
 =head1 DESCRIPTION
 
-OpenID Connect Library
+OpenID Connect Server/Client Library
 
 =head1 AUTHOR
 
