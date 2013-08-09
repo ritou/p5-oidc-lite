@@ -2,6 +2,7 @@ requires 'Class::Accessor::Fast', '0.34';
 requires 'Data::Dump', '1.17';
 requires 'JSON';
 requires 'JSON::WebToken', '0.07';
+requires 'MIME::Base64', '3.11';
 requires 'OAuth::Lite2', '0.05';
 requires 'Params::Validate', '0.95';
 requires 'perl', '5.008001';
