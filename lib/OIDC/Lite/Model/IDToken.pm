@@ -3,10 +3,10 @@ use strict;
 use warnings;
 use base 'Class::Accessor::Fast';
 
-use MIME::Base64 qw/encode_base64url decode_base64url/;
 use JSON::WebToken qw/encode_jwt decode_jwt/;
 use Params::Validate;
 use Digest::SHA qw/sha256 sha384 sha512/;
+use OIDC::Lite::Util::Base64 qw/encode_base64url decode_base64url/;
 use OIDC::Lite::Util::JWT;
 
 use constant HALF_BITS_DENOMINATOR => 2 * 8;
