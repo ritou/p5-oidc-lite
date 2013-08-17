@@ -5,6 +5,8 @@ Makefile.old
 inc/
 blib/
 cover_db/
+local/
+cpanfile.snapshot
 pm_to_blib
 *~
 /oidc-lite-*
