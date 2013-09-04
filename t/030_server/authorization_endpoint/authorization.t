@@ -947,7 +947,7 @@ TEST_REQUEST_ALLOW: {
 
     # code id_token
     $params = {
-                response_type => q{code id_token},
+                response_type => q{id_token code},
                 client_id     => q{client_id_1},
                 redirect_uri  => q{http://rp.example.org/redirect},
                 scope         => q{openid},
@@ -980,7 +980,7 @@ TEST_REQUEST_ALLOW: {
 
     # code token
     $params = {
-                response_type => q{code token},
+                response_type => q{token code},
                 client_id     => q{client_id_1},
                 redirect_uri  => q{http://rp.example.org/redirect},
                 scope         => q{openid},
@@ -1007,7 +1007,7 @@ TEST_REQUEST_ALLOW: {
 
     # id_token token
     $params = {
-                response_type => q{id_token token},
+                response_type => q{token id_token},
                 client_id     => q{client_id_1},
                 redirect_uri  => q{http://rp.example.org/redirect},
                 scope         => q{openid},
@@ -1040,7 +1040,7 @@ TEST_REQUEST_ALLOW: {
 
     # code id_token token
     $params = {
-                response_type => q{code id_token token},
+                response_type => q{token id_token code},
                 client_id     => q{client_id_1},
                 redirect_uri  => q{http://rp.example.org/redirect},
                 scope         => q{openid},

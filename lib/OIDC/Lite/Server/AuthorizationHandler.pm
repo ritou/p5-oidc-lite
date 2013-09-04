@@ -164,6 +164,9 @@ sub allow {
     my $dh = $self->{data_handler};
     my $req = $self->{data_handler}->request;
 
+    my @response_type_for_sort = split(/\s/, $req->param("response_type"));
+    @response_type_for_sort = sort @response_type_for_sort;
+    my $response_type = join(' ', @response_type_for_sort);
     my $client_id = $req->param("client_id");
     my $user_id = $dh->get_user_id_for_authorization();
     my $scope = $req->param("scope");
@@ -182,10 +185,10 @@ sub allow {
     # create Access Token
     my $access_token;
     if (
-        $req->param("response_type") eq 'token' ||
-        $req->param("response_type") eq 'code token' ||
-        $req->param("response_type") eq 'id_token token' ||
-        $req->param("response_type") eq 'code id_token token')
+        $response_type eq 'token' ||
+        $response_type eq 'code token' ||
+        $response_type eq 'id_token token' ||
+        $response_type eq 'code id_token token')
     {
         $access_token = $dh->create_or_update_access_token(
                         auth_info => $auth_info,
@@ -206,10 +209,10 @@ sub allow {
 
     # authorization code
     if (
-        $req->param("response_type") eq 'code' ||
-        $req->param("response_type") eq 'code token' ||
-        $req->param("response_type") eq 'code id_token' ||
-        $req->param("response_type") eq 'code id_token token')
+        $response_type eq 'code' ||
+        $response_type eq 'code token' ||
+        $response_type eq 'code id_token' ||
+        $response_type eq 'code id_token token')
     {
         $params->{code} = $auth_info->code;
         $id_token->code_hash($auth_info->code);
@@ -218,10 +221,10 @@ sub allow {
     # id_token
     $params->{id_token} = $id_token->get_token_string()
         if (
-            $req->param("response_type") eq 'id_token' ||
-            $req->param("response_type") eq 'code id_token' ||
-            $req->param("response_type") eq 'id_token token' ||
-            $req->param("response_type") eq 'code id_token token'
+            $response_type eq 'id_token' ||
+            $response_type eq 'code id_token' ||
+            $response_type eq 'id_token token' ||
+            $response_type eq 'code id_token token'
         );
 
     # build response
@@ -230,7 +233,7 @@ sub allow {
     };
 
     # set data to query or fragment
-    if($req->param("response_type") eq 'code'){
+    if($response_type eq 'code'){
         $res->{query} = $params;
     }else{
         $res->{fragment} = $params;
@@ -242,6 +245,10 @@ sub deny {
     my ($self) = @_;
     my $dh = $self->{data_handler};
     my $req = $self->{data_handler}->request;
+
+    my @response_type_for_sort = split(/\s/, $req->param("response_type"));
+    @response_type_for_sort = sort @response_type_for_sort;
+    my $response_type = join(' ', @response_type_for_sort);
 
     my $params = {
         error => q{access_denied},
@@ -255,7 +262,7 @@ sub deny {
     };
 
     # build response
-    if($req->param("response_type") eq 'code'){
+    if($response_type eq 'code'){
         $res->{query} = $params;
     }else{
         $res->{fragment} = $params;
