@@ -69,6 +69,12 @@ ok($@);
 $@ = undef;
 
 eval {
+    $dh->validate_acr_values(q{param});
+};
+ok($@);
+$@ = undef;
+
+eval {
     $dh->validate_request(q{param});
 };
 ok($@);
