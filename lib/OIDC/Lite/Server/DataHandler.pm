@@ -53,6 +53,11 @@ sub validate_login_hint {
     die "abstract method";
 }
 
+sub validate_acr_values {
+    my ($self, $param) = @_;
+    die "abstract method";
+}
+
 sub validate_request {
     my ($self, $param) = @_;
     die "abstract method";
@@ -166,7 +171,7 @@ If it's OK, return 1. Return 0 if not.
 Validation of login_hint param.
 If it's OK, return 1. Return 0 if not.
 
-=head2 validate_acr_values( $param 
+=head2 validate_acr_values( $param )
 
 Validation of acr_values param.
 If it's OK, return 1. Return 0 if not.
