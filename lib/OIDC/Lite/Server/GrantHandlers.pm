@@ -6,6 +6,7 @@ use OIDC::Lite::Server::GrantHandler::AuthorizationCode;
 use OAuth::Lite2::Server::GrantHandler::Password;
 use OAuth::Lite2::Server::GrantHandler::RefreshToken;
 use OAuth::Lite2::Server::GrantHandler::ClientCredentials;
+use OAuth::Lite2::Server::GrantHandler::GroupingRefreshToken;
 
 my %HANDLERS;
 
@@ -22,6 +23,8 @@ __PACKAGE__->add_handler( 'refresh_token' =>
     OAuth::Lite2::Server::GrantHandler::RefreshToken->new );
 __PACKAGE__->add_handler( 'client_credentials' =>
     OAuth::Lite2::Server::GrantHandler::ClientCredentials->new );
+__PACKAGE__->add_handler( 'grouping_refresh_token' =>
+    OAuth::Lite2::Server::GrantHandler::GroupingRefreshToken->new );
 
 #__PACKAGE__->add_handler( 'assertion' => );
 #__PACKAGE__->add_handler( 'none' => );
@@ -61,6 +64,7 @@ L<OIDC::Lite::Server::GrantHandler::AuthorizationCode>
 L<OAuth::Lite2::Server::GrantHandler::ClientCredentials>
 L<OAuth::Lite2::Server::GrantHandler::Password>
 L<OAuth::Lite2::Server::GrantHandler::RefreshToken>
+L<OAuth::Lite2::Server::GrantHandler::GroupingRefreshToken>
 
 =head1 AUTHOR
 
