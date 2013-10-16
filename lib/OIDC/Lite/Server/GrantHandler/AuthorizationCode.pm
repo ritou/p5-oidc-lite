@@ -26,11 +26,14 @@ sub handle_request {
             description => "'redirect_uri' not found"
         );
 
+    my $server_state = $req->param("server_state");
+
     my $auth_info = $dh->get_auth_info_by_code($code)
         or OAuth::Lite2::Server::Error::InvalidGrant->throw;
 
     Carp::croak "OAuth::Lite2::Server::DataHandler::get_auth_info_by_code doesn't return OAuth::Lite2::Model::AuthInfo"
-        unless ($auth_info->isa("OIDC::Lite::Model::AuthInfo"));
+        unless ($auth_info
+            && $auth_info->isa("OIDC::Lite::Model::AuthInfo"));
 
     OAuth::Lite2::Server::Error::InvalidClient->throw
         unless ($auth_info->client_id eq $client_id);
@@ -39,11 +42,19 @@ sub handle_request {
         unless ( $auth_info->redirect_uri
             && $auth_info->redirect_uri eq $redirect_uri);
 
+    if ( $auth_info->server_state ) {
+        OAuth::Lite2::Server::Error::InvalidServerState->throw
+            unless ( $server_state and $server_state eq $auth_info->server_state );
+    } else {
+        OAuth::Lite2::Server::Error::InvalidServerState->throw if ( $server_state );
+    }
+
     my $access_token = $dh->create_or_update_access_token(
         auth_info => $auth_info,
     );
     Carp::croak "OAuth::Lite2::Server::DataHandler::create_or_update_access_token doesn't return OAuth::Lite2::Model::AccessToken"
-        unless ($access_token->isa("OAuth::Lite2::Model::AccessToken"));
+        unless ($access_token
+            && $access_token->isa("OAuth::Lite2::Model::AccessToken"));
 
     my $res = {
         token_type => 'Bearer',

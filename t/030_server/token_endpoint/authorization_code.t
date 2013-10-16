@@ -201,4 +201,43 @@ $auth_info = $dh->create_or_update_auth_info(
     redirect_uri  => q{http://example.org/callback},
 }, q{OAuth::Lite2::Server::DataHandler::create_or_update_access_token doesn't return OAuth::Lite2::Model::AccessToken});
 
+# use server_state
+$auth_info = $dh->create_or_update_auth_info(
+    client_id    => q{foo},
+    user_id      => q{1},
+    scope        => q{email},
+    code         => q{code_bar_2},
+    redirect_uri => q{http://example.org/callback},
+    server_state => q{server_state_bar},
+);
+# missing server_state
+&test_error({
+    client_id     => q{foo},
+    code          => q{code_bar_2},
+    client_secret => q{secret_value},
+    redirect_uri  => q{http://example.org/callback},
+}, q{invalid_server_state});
+# invalid server_state
+&test_error({
+    client_id     => q{foo},
+    code          => q{code_bar_2},
+    client_secret => q{secret_value},
+    redirect_uri  => q{http://example.org/callback},
+    server_state  => q{server_state_foo},
+}, q{invalid_server_state});
+
+&test_success({
+    client_id     => q{foo},
+    code          => q{code_bar_2},
+    client_secret => q{secret_value},
+    redirect_uri  => q{http://example.org/callback},
+    server_state  => q{server_state_bar},
+}, {
+    token_type    => q{Bearer},
+    token         => q{access_token_2},
+    expires_in    => q{3600},
+    refresh_token => q{refresh_token_4},
+    id_token      => q{id_token_4},
+});
+
 done_testing;

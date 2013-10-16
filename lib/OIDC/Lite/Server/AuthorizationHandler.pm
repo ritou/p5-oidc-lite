@@ -78,10 +78,24 @@ sub handle_request {
         description => "'redirect_uri' is invalid"
     ) unless ($dh->validate_redirect_uri($client_id, $redirect_uri));
 
+    # sever_state
+    # validate server_state for CSRF Protection
+    my $server_state = $req->param("server_state");
+    if ( $server_state ) {
+        OAuth::Lite2::Server::Error::InvalidServerState->throw(
+            description => "'server_state' is invalid"
+        ) unless $dh->validate_server_state($server_state, $client_id);
+    }
+
     # scope
     my $scope = $req->param("scope");
     OAuth::Lite2::Server::Error::InvalidScope->throw
         unless ($dh->validate_scope($client_id, $scope));
+
+    # scope and server_state
+    OAuth::Lite2::Server::Error::InvalidRequest->throw(
+        description => "This scope requires 'server_state'"
+    ) unless ($server_state || !$dh->require_server_state($scope));
 
     ## optional parameters
     # nonce

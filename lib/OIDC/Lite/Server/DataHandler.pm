@@ -84,6 +84,17 @@ sub create_or_update_auth_info {
     die "abstract method";
 }
 
+# Because it is a method added later and optional, this must not die
+sub validate_server_state {
+    my ($self, $server_state, $client_id) = @_;
+    return 0;
+}
+
+sub require_server_state {
+    my ($self, $scope) = @_;
+    return 0;
+}
+
 =head1 NAME
 
 OIDC::Lite::Server::DataHandler - Base class that specifies interface for data handler for your service.
@@ -197,6 +208,14 @@ Return OIDC::Lite::Model::IDToken object.
 =head2 create_or_update_auth_info(%args) 
 
 Return OIDC::Lite::Model::AuthInfo object.
+
+=head2 validate_server_state($server_state, $client_id)
+
+Return whether server_state is valid or not
+
+=head2 require_server_state($scope)
+
+Return whether scope requires server_state
 
 =head1 AUTHOR
 

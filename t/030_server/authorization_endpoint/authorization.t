@@ -37,6 +37,13 @@ TestDataHandler->add_client(    id => q{client_id_4},
                                 scope => q{openid}, 
 );
 
+TestDataHandler->add_client(    id => q{client_id_5}, 
+                                response_type => q{code}, 
+                                redirect_uri => q{http://rp.example.org/redirect}, 
+                                server_state => q{valid},
+                                scope => q{require_ss}, 
+);
+
 TEST_RESPONSE_TYPE: {
     # not found
     my $params = {
@@ -223,6 +230,34 @@ TEST_REDIRECT_URI: {
     is($error_message, q{invalid_request: 'redirect_uri' is invalid});
 };
 
+TEST_SERVER_STATE: {
+    my $params = {
+                response_type => q{code},
+                client_id     => q{client_id_5},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{require_ss},
+                server_state  => q{invalid},
+    };
+
+    my $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    my $dh = TestDataHandler->new(request => $request);
+    my @allowed_response_type = qw(code token);
+    my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    my $error_message;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_server_state: 'server_state' is invalid});
+};
+
 TEST_SCOPE: {
     # invalid
     my $params = {
@@ -249,6 +284,33 @@ TEST_SCOPE: {
             ? $_->type : $_;
     };
     is($error_message, q{invalid_scope: });
+};
+
+TEST_REQUIRE_SERVER_STATE: {
+    my $params = {
+                response_type => q{code},
+                client_id     => q{client_id_5},
+                redirect_uri  => q{http://rp.example.org/redirect},
+                scope         => q{require_ss},
+    };
+
+    my $request = Plack::Request->new({
+                REQUEST_URI    => q{http://example.org/authorize},
+                REQUEST_METHOD => q{GET},
+                QUERY_STRING   => build_content($params),
+    });
+
+    my $dh = TestDataHandler->new(request => $request);
+    my @allowed_response_type = qw(code token);
+    my $authz_handler = OIDC::Lite::Server::AuthorizationHandler->new(data_handler => $dh, response_types => \@allowed_response_type);
+    my $error_message;
+    try {
+        $authz_handler->handle_request();
+    } catch {
+        $error_message = ($_->isa("OAuth::Lite2::Error"))
+            ? $_->type : $_;
+    };
+    is($error_message, q{invalid_request: This scope requires 'server_state'});
 };
 
 TEST_NONCE: {

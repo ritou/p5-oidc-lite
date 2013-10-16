@@ -27,6 +27,7 @@ sub new {
             refresh_token   => { optional => 1 },
             code            => { optional => 1 },
             redirect_uri    => { optional => 1 },
+            server_state    => { optional => 1 },
             id_token        => { optional => 1 },
             userinfo_claims => { optional => 1 },
         },
@@ -69,6 +70,10 @@ Authorization code related with authorization info
 =head2 redirect_uri
 
 Redirect URI related with authorization info
+
+=head2 server_state
+
+Server State for CSRF Protection
 
 =head2 id_token
 

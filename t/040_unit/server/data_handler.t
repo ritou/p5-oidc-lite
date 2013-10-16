@@ -103,4 +103,10 @@ eval {
 };
 ok($@);
 
+my $ret = $dh->validate_server_state;
+ok(!$ret);
+
+$ret = $dh->require_server_state;
+ok(!$ret);
+
 done_testing;

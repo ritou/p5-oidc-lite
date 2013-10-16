@@ -1,7 +1,7 @@
 package OIDC::Lite::Client::WebServer;
 use strict;
 use warnings;
-use base 'Class::ErrorHandler';
+use parent 'OAuth::Lite2::Client::WebServer';
 use bytes ();
 
 use URI;
@@ -14,7 +14,7 @@ use Params::Validate qw(HASHREF);
 use OAuth::Lite2;
 use OAuth::Lite2::Util qw(build_content);
 use OIDC::Lite::Client::TokenResponseParser;
-
+use OAuth::Lite2::Client::StateResponseParser;
 
 =head1 NAME
 
@@ -173,6 +173,7 @@ sub new {
 
     $self->{format} = 'json';
     $self->{response_parser} = OIDC::Lite::Client::TokenResponseParser->new;
+    $self->{state_response_parser} = OAuth::Lite2::Client::StateResponseParser->new;
 
     return $self;
 }
@@ -240,6 +241,7 @@ sub get_access_token {
     my %args = Params::Validate::validate(@_, {
         code         => 1,
         redirect_uri => 1,
+        server_state => { optional => 1 },
         uri          => { optional => 1 },
         use_basic_schema    => { optional => 1 },
     });
@@ -254,6 +256,7 @@ sub get_access_token {
         code          => $args{code},
         redirect_uri  => $args{redirect_uri},
     );
+    $params{server_state} = $args{server_state} if $args{server_state};
 
     unless ($args{use_basic_schema}){
         $params{client_id}      = $self->{id};
