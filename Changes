@@ -2,6 +2,8 @@ Revision history for Perl extension OIDC::Lite
 
 {{$NEXT}}
 
+0.05 2013-10-17T17:34:06Z
+        - add support for "server_state" grant type
 0.04 2013-09-10T16:50:01Z
         - fixed bug for Authorization Handler
 0.03 2013-08-17T14:19:14Z
