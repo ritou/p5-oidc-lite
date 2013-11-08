@@ -2,6 +2,9 @@ Revision history for Perl extension OIDC::Lite
 
 {{$NEXT}}
 
+0.06 2013-11-08T17:10:29Z
+    - replace JSON to JSON::XS
+
 0.05 2013-10-17T17:34:06Z
     - add support for "server_state" grant type
 
