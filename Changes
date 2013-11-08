@@ -3,15 +3,19 @@ Revision history for Perl extension OIDC::Lite
 {{$NEXT}}
 
 0.05 2013-10-17T17:34:06Z
-        - add support for "server_state" grant type
+    - add support for "server_state" grant type
+
 0.04 2013-09-10T16:50:01Z
-        - fixed bug for Authorization Handler
+    - fixed bug for Authorization Handler
+
 0.03 2013-08-17T14:19:14Z
-        - updated the dependence 
-        - removed Dynamic Client Registration support
-        - migrated to Minilla
+    - updated the dependence 
+    - removed Dynamic Client Registration support
+    - migrated to Minilla
+
 0.02  Thu Mar 7 00:00:00 2013
-        - added test_require modules
-        - removed Session related modules
+    - added test_require modules
+    - removed Session related modules
+
 0.01  Sun Mar 3 00:00:00 2013
-        - initial version
+    - initial version

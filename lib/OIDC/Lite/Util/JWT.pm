@@ -2,7 +2,7 @@ package OIDC::Lite::Util::JWT;
 use strict;
 use warnings;
 
-use JSON qw/decode_json encode_json/;
+use JSON::XS qw/decode_json encode_json/;
 use MIME::Base64 qw/encode_base64url decode_base64url/;
 
 use constant {
