@@ -2,6 +2,9 @@ Revision history for Perl extension OIDC::Lite
 
 {{$NEXT}}
 
+0.07 2014-07-22T08:02:31Z
+    - catch up OAuth::Lite2-0.09
+
 0.06 2013-11-08T17:10:29Z
     - replace JSON to JSON::XS
 
