@@ -24,10 +24,13 @@ __PACKAGE__->add_handler( 'refresh_token' =>
     OAuth::Lite2::Server::GrantHandler::RefreshToken->new );
 __PACKAGE__->add_handler( 'client_credentials' =>
     OAuth::Lite2::Server::GrantHandler::ClientCredentials->new );
+# Grant types which is not defined in RFC
 __PACKAGE__->add_handler( 'grouping_refresh_token' =>
     OAuth::Lite2::Server::GrantHandler::GroupingRefreshToken->new );
 __PACKAGE__->add_handler( 'server_state' =>
     OAuth::Lite2::Server::GrantHandler::ServerState->new );
+__PACKAGE__->add_handler( 'external_service' =>
+    OAuth::Lite2::Server::GrantHandler::ExternalService->new );
 
 #__PACKAGE__->add_handler( 'assertion' => );
 #__PACKAGE__->add_handler( 'none' => );
