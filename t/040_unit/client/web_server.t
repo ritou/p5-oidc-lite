@@ -252,4 +252,12 @@ is($res->id_token, q{id_token_1});
 is($res->expires_in, q{3600});
 is($res->scope, q{email});
 
+# redirect_uri is optional for get_access_token
+eval {
+    $res = $client->get_access_token(
+        code         => q{invalid},
+    );
+};
+ok(!$@, qr/redirect_uri is optional/);
+
 done_testing;
