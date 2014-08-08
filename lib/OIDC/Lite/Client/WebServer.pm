@@ -240,7 +240,7 @@ sub get_access_token {
 
     my %args = Params::Validate::validate(@_, {
         code         => 1,
-        redirect_uri => 1,
+        redirect_uri => { optional => 1 },
         server_state => { optional => 1 },
         uri          => { optional => 1 },
         use_basic_schema    => { optional => 1 },
@@ -254,8 +254,8 @@ sub get_access_token {
     my %params = (
         grant_type    => 'authorization_code',
         code          => $args{code},
-        redirect_uri  => $args{redirect_uri},
     );
+    $params{redirect_uri} = $args{redirect_uri} if $args{redirect_uri};
     $params{server_state} = $args{server_state} if $args{server_state};
 
     unless ($args{use_basic_schema}){
