@@ -3,7 +3,7 @@ requires 'Data::Dump', '1.17';
 requires 'JSON::XS';
 requires 'JSON::WebToken', '0.07';
 requires 'MIME::Base64', '3.11';
-requires 'OAuth::Lite2', '0.09';
+requires 'OAuth::Lite2', '0.10';
 requires 'Params::Validate', '0.95';
 requires 'perl', '5.008001';
 
