@@ -4,7 +4,7 @@
       "Ryo Ito <ritou.06@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v1.1.0, CPAN::Meta::Converter version 2.141170",
+   "generated_by" : "Minilla/v2.1.1, CPAN::Meta::Converter version 2.141170",
    "license" : [
       "perl_5"
    ],
@@ -37,8 +37,6 @@
       },
       "configure" : {
          "requires" : {
-            "CPAN::Meta" : "0",
-            "CPAN::Meta::Prereqs" : "0",
             "Module::Build" : "0.38"
          }
       },
@@ -58,7 +56,7 @@
             "JSON::WebToken" : "0.07",
             "JSON::XS" : "0",
             "MIME::Base64" : "3.11",
-            "OAuth::Lite2" : "0.09",
+            "OAuth::Lite2" : "0.10",
             "Params::Validate" : "0.95",
             "perl" : "5.008001"
          }
@@ -76,5 +74,5 @@
          "web" : "https://github.com/ritou/p5-oidc-lite"
       }
    },
-   "version" : "0.07"
+   "version" : "0.08"
 }
