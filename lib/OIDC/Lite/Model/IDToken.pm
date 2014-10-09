@@ -85,7 +85,7 @@ sub new {
 
 =head2 get_token_string()
 
-generate signarure and return ID Token string.
+generate signature and return ID Token string.
 
     my $id_token_string = $id_token->get_token_string();
 
@@ -107,7 +107,7 @@ sub get_token_string {
 
 =head2 access_token_hash()
 
-generate signarure and return ID Token string.
+generate signature and return ID Token string.
 
     $id_token->code_hash($access_token);
 
