@@ -349,7 +349,7 @@ sub refresh_access_token {
 Returns a HTTP::Request object that is used
 when you obtain or refresh access token last time internally.
 
-=head2 last_request
+=head2 last_response
 
 Returns a HTTP::Response object that is used
 when you obtain or refresh access token last time internally.
