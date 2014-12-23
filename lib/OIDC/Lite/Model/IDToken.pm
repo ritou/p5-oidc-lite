@@ -197,7 +197,7 @@ sub verify {
 
     my $payload = undef;
     eval{
-        $payload = decode_jwt($self->token_string, $self->key);
+        $payload = decode_jwt($self->token_string, $self->key, 1, 1);
     };
     if($@){
         return 0;
