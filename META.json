@@ -74,7 +74,7 @@
          "web" : "https://github.com/ritou/p5-oidc-lite"
       }
    },
-   "version" : "0.08",
+   "version" : "0.09",
    "x_contributors" : [
       "Clément OUDOT <clem.oudot@gmail.com>"
    ]

@@ -2,6 +2,9 @@ Revision history for Perl extension OIDC::Lite
 
 {{$NEXT}}
 
+0.09 2014-12-23T07:27:56Z
+    - update JSON::WebToken version to 0.09
+
 0.08 2014-08-08T06:23:19Z
     - redirect_uri is set optional for WebServer Client for Google specific case
     - update OAuth::Lite2 version to 0.10
