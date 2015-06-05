@@ -239,6 +239,18 @@ TEST_VERIFY: {
     $id_token = OIDC::Lite::Model::IDToken->load($token_string);
     ok($id_token->verify());
 
+    $token_string = 'eyJhbGciOiJub25lIiwidHlwIjoiSldTIn0.eyJmb28iOiJiYXIifQ.';
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, '', 'none');
+    ok($id_token->verify());
+
+    $token_string = 'eyJhbGciOiJub25lIiwidHlwIjoiSldTIn0.eyJmb28iOiJiYXIifQ.';
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, 'should be ignored', 'none');
+    ok($id_token->verify());
+
+    $token_string = 'eyJhbGciOiJub25lIiwidHlwIjoiSldTIn0.eyJmb28iOiJiYXIifQ.';
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, '', 'HS256');
+    ok(!$id_token->verify());
+
     $token_string = 'eyJhbGciOiJub25lIiwidHlwIjoiSldTIn0.eyJmb28iOiJiYXIifQ.INVALID';
     $id_token = OIDC::Lite::Model::IDToken->load($token_string);
     ok(!$id_token->verify());
@@ -250,16 +262,39 @@ TEST_VERIFY: {
     $id_token->key($key);
     ok($id_token->verify());
 
-    $token_string = 'eyJ0eXAiOiJKV1MiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.Q3cQIgBthdlPPhP5elxuD58iB-Vw2AtxPDPlXng3YaM';
-    $id_token = OIDC::Lite::Model::IDToken->load($token_string);
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $key);
+    ok($id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $key, 'HS256');
+    ok($id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, '', 'HS256');
+    ok(!$id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $key, 'HS384');
+    ok(!$id_token->verify());
+
     $key = q{this_is_invalid_shared_secret_key};
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string);
     $id_token->key($key);
     ok(!$id_token->verify());
 
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $key);
+    ok(!$id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $key, 'HS256');
+    ok(!$id_token->verify());
+
     $token_string = 'eyJ0eXAiOiJKV1MiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.INVALIDSIGNATURE';
-    $id_token = OIDC::Lite::Model::IDToken->load($token_string);
     $key = q{this_is_shared_secret_key};
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string);
     $id_token->key($key);
+    ok(!$id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $key);
+    ok(!$id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $key, 'HS256');
     ok(!$id_token->verify());
 
     # alg : RS256
@@ -268,9 +303,24 @@ TEST_VERIFY: {
     $id_token->key($pubkey);
     ok($id_token->verify());
 
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $pubkey);
+    ok($id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $pubkey, 'RS256');
+    ok($id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $pubkey, 'RS512');
+    ok(!$id_token->verify());
+
     $token_string = 'eyJ0eXAiOiJKV1MiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.INVALID';
     $id_token = OIDC::Lite::Model::IDToken->load($token_string);
     $id_token->key($pubkey);
+    ok(!$id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $pubkey);
+    ok(!$id_token->verify());
+
+    $id_token = OIDC::Lite::Model::IDToken->load($token_string, $pubkey, 'RS256');
     ok(!$id_token->verify());
 };
 
