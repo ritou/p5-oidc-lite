@@ -4,7 +4,7 @@
       "Ryo Ito <ritou.06@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.3.0, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "Minilla/v2.4.1, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -53,7 +53,7 @@
          "requires" : {
             "Class::Accessor::Fast" : "0.34",
             "Data::Dump" : "1.17",
-            "JSON::WebToken" : "0.09",
+            "JSON::WebToken" : "0.10",
             "JSON::XS" : "0",
             "MIME::Base64" : "3.11",
             "OAuth::Lite2" : "0.10",

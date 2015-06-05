@@ -39,6 +39,7 @@ __PACKAGE__->mk_accessors(qw(
     payload
     key
     token_string
+    alg
 ));
 
 =head1 METHODS
@@ -53,6 +54,7 @@ Constructor
         header  => \%header,
         payload => \%payload,
         key     => $key,
+        alg     => $alg,
     );
 
 =cut
@@ -66,6 +68,7 @@ sub new {
             header      => { optional => 1 },
             payload     => { optional => 1 },
             key         => { optional => 1 },
+            alg         => { optional => 1 },
         },
         allow_extra => 0,
     );
@@ -157,7 +160,7 @@ load ID Token object from token string
 =cut
 
 sub load {
-    my ($self, $token_string) = @_;
+    my ($self, $token_string, $key, $alg) = @_;
         return unless($token_string);
 
     my $header  = OIDC::Lite::Util::JWT::header($token_string);
@@ -166,7 +169,9 @@ sub load {
 
     my $id_token =  OIDC::Lite::Model::IDToken->new(
                        header   => $header, 
-                       payload  => $payload, 
+                       payload  => $payload,
+                       key      => $key,
+                       alg      => $alg,
                     );
     $id_token->token_string($token_string);
     return $id_token;
@@ -177,10 +182,10 @@ sub load {
 verify token signature.
 
     my $token_string = '...';
-    my $id_token = OIDC::Lite::Model::IDToken->load($token_string);
-
+    my $alg = 'HS256';
     my $key = 'shared_secret_key';
-    $id_token->key($key);
+
+    my $id_token = OIDC::Lite::Model::IDToken->load($token_string, $key, $alg);
     unless($id_token->verify()){
         # validation failed
     }
@@ -195,9 +200,17 @@ sub verify {
     $self->key('')
         unless($self->key);
 
+    unless ($self->alg) {
+        if ($self->header->{alg}) {
+            $self->alg($self->header->{alg});
+        } else {
+            $self->alg('none');
+        }
+    }
+
     my $payload = undef;
     eval{
-        $payload = decode_jwt($self->token_string, $self->key, 1, 1);
+        $payload = decode_jwt($self->token_string, $self->key, 1, [$self->alg]);
     };
     if($@){
         return 0;
