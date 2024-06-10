@@ -72,12 +72,12 @@
          "web" : "https://github.com/ritou/p5-oidc-lite"
       }
    },
-   "version" : "0.10",
+   "version" : "0.11",
    "x_contributors" : [
       "Clément OUDOT <clem.oudot@gmail.com>",
       "tatsumack <tatsu.mack@gmail.com>",
       "yoshikazusawa <883514+yoshikazusawa@users.noreply.github.com>"
    ],
    "x_serialization_backend" : "JSON::PP version 4.16",
-   "x_static_install" : 0
+   "x_static_install" : 1
 }
