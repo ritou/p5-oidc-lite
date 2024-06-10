@@ -8,6 +8,7 @@ use OAuth::Lite2::Server::GrantHandler::RefreshToken;
 use OAuth::Lite2::Server::GrantHandler::ClientCredentials;
 use OAuth::Lite2::Server::GrantHandler::GroupingRefreshToken;
 use OAuth::Lite2::Server::GrantHandler::ServerState;
+use OAuth::Lite2::Server::GrantHandler::ExternalService;
 
 my %HANDLERS;
 
