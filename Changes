@@ -2,6 +2,9 @@ Revision history for Perl extension OIDC::Lite
 
 {{$NEXT}}
 
+0.12.1 2025-05-19T17:01:53Z
+   - re-upload
+
 0.12 2025-05-19T16:50:24Z
    - re-build
 
