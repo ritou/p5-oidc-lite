@@ -4,7 +4,7 @@
       "Ryo Ito <ritou.06@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.1.23, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "Minilla/v3.1.26, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -72,7 +72,7 @@
          "web" : "https://github.com/ritou/p5-oidc-lite"
       }
    },
-   "version" : "0.11",
+   "version" : "0.12",
    "x_contributors" : [
       "Clément OUDOT <clem.oudot@gmail.com>",
       "tatsumack <tatsu.mack@gmail.com>",
